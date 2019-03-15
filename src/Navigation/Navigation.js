@@ -16,7 +16,11 @@ const DEFAULTS = {
     minInterval: 0.1,
     overflowOpacity: 0.06,
     controlsOpacity: 0.2,
-    navColor: '#339'
+    navColor: '#339',
+    minY: 0,
+    maxY: 0,
+    minX: 0,
+    maxX: 0
 };
 
 /**
@@ -58,6 +62,7 @@ class Navigation extends SimpleEventEmitter {
 
         this.navSvg = this._getNavSvg();
         this.bgContainerG = this._getBgContainerG();
+        this.scaleContainerG = this._getScaleContainerG();
         this.bgG = this._getBgG();
         this.navControlsG = this._getNavControlsG();
         this.navMask = this._getMask();
@@ -89,19 +94,24 @@ class Navigation extends SimpleEventEmitter {
 
     rerender() {
         this.rerenderTransform();
+        this.rerenderNavigation();
+        this.rerenderBaseDimensions();
+    }
+
+    rerenderNavigation() {
         this.rerenderNavControls();
         this.rerenderNavRect();
     }
 
     rerenderTransform() {
         if (this.opts.scaleFactor === 1 || this.opts.scaleFactor === Number.NEGATIVE_INFINITY) {
-            return this.bgG.style.transform = '';
+            return this.scaleContainerG.style.transform = '';
         }
 
         const scaleY = 1 / this.opts.scaleFactor;
         const translateY = (this.opts.scaleFactor - 1) * this.opts.height * scaleY;
 
-        this.bgG.style.transform = `translate(0,${translateY}px) scale(1,${scaleY}) `;
+        this.scaleContainerG.style.transform = `translate(0,${translateY}px) scale(1,${scaleY}) `;
     }
 
     rerenderNavRect() {
@@ -121,6 +131,13 @@ class Navigation extends SimpleEventEmitter {
         this.endControlRect.style.transform = `translate(${translateXEnd}px,0)`;
     }
 
+    rerenderBaseDimensions() {
+        const scaleX = this.opts.width / (this.opts.maxX - this.opts.minX);
+        const scaleY = this.opts.height / (this.opts.maxY - this.opts.minY);
+
+        this.bgG.style.transform = `scale(${scaleX},${scaleY}) translate(-${this.opts.minX}px,0)`;
+    }
+
     _combine() {
         this.navMask.appendChild(this.navMaskRectG);
 
@@ -128,7 +145,8 @@ class Navigation extends SimpleEventEmitter {
         this.navControlsG.appendChild(this.startControlRect);
         this.navControlsG.appendChild(this.endControlRect);
 
-        this.bgContainerG.appendChild(this.bgG);
+        this.bgContainerG.appendChild(this.scaleContainerG);
+        this.scaleContainerG.appendChild(this.bgG);
 
         this.navSvg.appendChild(this.navMask);
         this.navSvg.appendChild(this.bgContainerG);
@@ -149,8 +167,12 @@ class Navigation extends SimpleEventEmitter {
         });
     }
 
+    _getScaleContainerG() {
+        return createSvgElement('g', 'scale-container animate-transform');
+    }
+
     _getBgG() {
-        return createSvgElement('g', 'bg animate-transform');
+        return createSvgElement('g', 'bg');
     }
 
     _getMask() {
@@ -253,7 +275,7 @@ class Navigation extends SimpleEventEmitter {
             this.opts.intervalEnd = Math.min(Math.max(this.opts.intervalEnd + diff, interval), 1);
 
             this._emitIntervalChange();
-            this.rerender();
+            this.rerenderNavigation();
         }, () => this._emitIntervalChangeEnd());
 
         return rect;
@@ -272,7 +294,7 @@ class Navigation extends SimpleEventEmitter {
             this.opts.intervalEnd = Math.max(this.opts.intervalEnd, this.opts.intervalStart + this.opts.minInterval);
 
             this._emitIntervalChange();
-            this.rerender();
+            this.rerenderNavigation();
         }, () => this._emitIntervalChangeEnd());
 
         return rect;
@@ -291,7 +313,7 @@ class Navigation extends SimpleEventEmitter {
             this.opts.intervalStart = Math.min(this.opts.intervalStart, this.opts.intervalEnd - this.opts.minInterval);
 
             this._emitIntervalChange();
-            this.rerender();
+            this.rerenderNavigation();
         }, () => this._emitIntervalChangeEnd());
 
         return rect;

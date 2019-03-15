@@ -50,6 +50,7 @@ class FollowersChart {
         this.xDays = this.x.map(i => i / DAY);
 
         this.maxY = this._getMaxY();
+
         this.intervalMaxY = this._getIntervalMaxY();
 
         this.chart = this._getChart();
@@ -143,7 +144,10 @@ class FollowersChart {
             scaleFactor: this.intervalMaxY / this.maxY,
             intervalMaxY: this.intervalMaxY,
             intervalStart: this.opts.intervalStart,
-            intervalEnd: this.opts.intervalEnd
+            intervalEnd: this.opts.intervalEnd,
+            maxY: this.maxY,
+            minX: this.xDays[0],
+            maxX: this.xDays[this.xDays.length - 1]
         });
     }
 
@@ -165,6 +169,9 @@ class FollowersChart {
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd,
             minInterval: this.opts.minInterval,
+            maxY: this.maxY,
+            minX: this.xDays[0],
+            maxX: this.xDays[this.xDays.length - 1]
         });
     }
 

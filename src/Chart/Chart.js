@@ -5,7 +5,11 @@ const DEFAULTS = {
     height: 400,
     scaleFactor: 1,
     intervalStart: 0,
-    intervalEnd: 1
+    intervalEnd: 1,
+    minY: 0,
+    maxY: 0,
+    minX: 0,
+    maxX: 0
 };
 
 module.exports.Chart = class Chart {
@@ -57,6 +61,14 @@ module.exports.Chart = class Chart {
     rerender() {
         this.rerenderTransformX();
         this.rerenderTransfromY();
+        this.rerenderBaseDimensions()
+    }
+
+    rerenderBaseDimensions() {
+        const scaleX = this.opts.width / (this.opts.maxX - this.opts.minX);
+        const scaleY = this.opts.height / (this.opts.maxY - this.opts.minY);
+
+        this.bgG.style.transform = `scale(${scaleX},${scaleY}) translate(-${this.opts.minX}px,0)`;
     }
 
     rerenderTransfromY() {

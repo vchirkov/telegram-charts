@@ -5,10 +5,7 @@ const DEFAULTS = {
     d: '',
     x: [],
     y: [],
-    minY: 0,
     maxY: 0,
-    minX: 0,
-    maxX: 0,
     name: '',
     color: '#000',
     strokeWidth: 2,
@@ -22,8 +19,6 @@ module.exports.Path = class Path {
         this.opts = Object.assign({}, DEFAULTS, opts);
 
         this.id = id;
-        this.opts.minX = this.opts.minX || this.opts.x[0];
-        this.opts.maxX = this.opts.maxX || this.opts.x[this.opts.x.length - 1];
         this.opts.d = this.opts.d || pathDMaxY(this.opts.x, this.opts.y, this.opts.maxY);
 
         this.pathG = this._getPathG();
@@ -45,7 +40,6 @@ module.exports.Path = class Path {
 
     rerender() {
         this.rerenderVisibility();
-        this.rerenderTransform();
     }
 
     rerenderVisibility() {
@@ -54,14 +48,6 @@ module.exports.Path = class Path {
         } else {
             this.path.style.opacity = 0;
         }
-    }
-
-    rerenderTransform() {
-        const scaleX = this.opts.width / (this.opts.maxX - this.opts.minX);
-        const scaleY = this.opts.height / (this.opts.maxY - this.opts.minY);
-
-        this.path.style.transform = `scale(${scaleX},${scaleY}) translate(-${this.opts.minX}px,0)`;
-
     }
 
     _combine() {
