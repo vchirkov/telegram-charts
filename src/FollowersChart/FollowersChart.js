@@ -189,18 +189,14 @@ class FollowersChart {
                 name,
                 color,
                 x: this.xDays,
-                maxY: this.maxY,
-                strokeWidth: this.opts.strokeWidth,
-                width: this.opts.width,
-                height: this.opts.chartHeight
+                height: this.maxY,
+                strokeWidth: this.opts.strokeWidth
             });
         });
     }
 
     _getNavPaths() {
-        return this.chartPaths.map((path) => new Path(path.id, Object.assign({}, path.opts, {
-            height: this.opts.navHeight
-        })));
+        return this.chartPaths.map((path) => new Path(path.id, Object.assign({}, path.opts)));
     }
 
     _getContainerDiv() {

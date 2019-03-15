@@ -1,4 +1,4 @@
-module.exports.pathDMaxY = function pathDMaxY(x, y, maxY) {
+module.exports.pathD = function pathD(x, y, maxY = 0) {
     // assumption: x.length > 0
     // assumption: x.length === y.length
     // assumption: y[i] > 0 (i:0 - y.length)

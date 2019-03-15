@@ -1,16 +1,14 @@
 const {createSvgElement} = require('../utils/createElement');
-const {pathDMaxY} = require('../utils/pathD');
+const {pathD} = require('../utils/pathD');
 
 const DEFAULTS = {
     d: '',
     x: [],
     y: [],
-    maxY: 0,
+    height: 0,
     name: '',
     color: '#000',
     strokeWidth: 2,
-    width: 600,
-    height: 400,
     visible: true
 };
 
@@ -19,7 +17,7 @@ module.exports.Path = class Path {
         this.opts = Object.assign({}, DEFAULTS, opts);
 
         this.id = id;
-        this.opts.d = this.opts.d || pathDMaxY(this.opts.x, this.opts.y, this.opts.maxY);
+        this.opts.d = this.opts.d || pathD(this.opts.x, this.opts.y, this.opts.height);
 
         this.pathG = this._getPathG();
         this.path = this._getPath();
