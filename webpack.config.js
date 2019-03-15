@@ -1,13 +1,15 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+
 const path = require('path');
 
 module.exports = {
-    devtool: 'source-map', // more info:https://webpack.js.org/guides/development/#using-source-maps and https://webpack.js.org/configuration/devtool/
+    devtool: 'source-map',
     entry: [path.resolve(__dirname, 'src/index.js')],
     target: 'web',
     output: {
-        path: path.resolve(__dirname, 'dist'), // Note: Physical files are only output by the production build task `npm run build`.
-        publicPath: '/',
+        path: path.resolve(__dirname, 'dist'),
         filename: 'index.js'
     },
     devServer: {
@@ -15,45 +17,36 @@ module.exports = {
         compress: true,
         port: 3000
     },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.svg/,
+                use: {
+                    loader: 'svg-url-loader'
+                }
+            }
+        ]
+    },
     plugins: [
-        new HtmlWebpackPlugin({     // Create HTML file that includes references to bundled CSS and JS.
+        new HtmlWebpackPlugin({
             path: path.resolve(__dirname, 'dist'),
+            template: path.resolve(__dirname, './src/index.html'),
             title: 'Telegram Charts',
             filename: 'index.html',
             favicon: 'assets/favicon.svg',
             inject: 'body',
             minify: true
-        })
-    ],
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            limit: 10000,
-                            mimetype: 'image/svg+xml'
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.less$/,
-                use: [{
-                    loader: 'style-loader' // creates style nodes from JS strings
-                }, {
-                    loader: 'css-loader' // translates CSS into CommonJS
-                }, {
-                    loader: 'less-loader' // compiles Less to CSS
-                }]
-            }
-        ]
-    }
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'index.css'
+        }),
+        new OptimizeCSSAssetsPlugin({})
+    ]
 };
