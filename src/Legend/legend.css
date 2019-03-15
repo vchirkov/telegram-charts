@@ -1,0 +1,63 @@
+.legend {
+    display: flex;
+}
+
+.legend .legend-item {
+    display: flex;
+    cursor: pointer;
+    user-select: none;
+    align-items: center;
+    padding: 6px;
+    margin-right: 12px;
+    border-radius: 16px;
+    border: solid 1px rgba(33, 33, 99, 0.1);
+}
+
+.legend .legend-item-icon-container {
+    position: relative;
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+.legend .legend-item-icon-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 50%;
+    transition: border-width 0.125s ease;
+    width: 100%;
+    height: 100%;
+}
+
+.legend .legend-item[selected="true"] .legend-item-icon-container:before {
+    border-width: 8px;
+}
+
+.legend .legend-item-icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 0;
+    background-image: url('./assets/check.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+
+    transition: background-size 0.125s ease 0.125s;
+}
+
+.legend .legend-item[selected="true"] .legend-item-icon {
+    background-size: 50%;
+}
+
+.legend .legend-item-name {
+    margin-right: 4px;
+}

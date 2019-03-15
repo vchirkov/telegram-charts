@@ -1,0 +1,12 @@
+.followers-chart {
+    display: flex;
+    flex-direction: column;
+}
+
+.animate-transform {
+    transition: transform 0.25s ease;
+}
+
+.animate-opacity {
+    transition: opacity 0.25s ease;
+}

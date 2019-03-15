@@ -1,7 +1,10 @@
-import data from './data/chart_data';
-import {FollowersChart} from "./FollowersChart";
+const {FollowersChart} = require('./FollowersChart/FollowersChart');
 
-const chart = data[0];
+//assumption: data fetch mechanism is a temporary solution
+// to avoid server requests and additional lib file size
 
-const c = new FollowersChart(chart, 600, 400);
-document.body.appendChild(c.svg);
+data.forEach(chartData => {
+    const c = new FollowersChart(chartData);
+    document.body.appendChild(c.getRoot());
+});
+
