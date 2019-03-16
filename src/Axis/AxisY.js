@@ -1,9 +1,10 @@
 const {createSvgElement} = require('../utils/createElement');
 
 const DEFAULTS = {
+    height: 0,
+    width: 0,
     maxY: 0,
-    maxX: 0,
-    scaleFactor: 1,
+    intervalMaxY: 0,
     ticksNumber: 5,
     ticksTop: 0.8,
     color: '#000',
@@ -28,8 +29,11 @@ module.exports.AxisY = class AxisY {
         return this.axisSvg;
     }
 
-    update({scaleFactor}) {
-        this.opts.scaleFactor = scaleFactor;
+    update({intervalMaxY}) {
+        if (this.opts.intervalMaxY === intervalMaxY) {
+            return;
+        }
+        this.opts.intervalMaxY = intervalMaxY;
         this.rerender();
     }
 
@@ -82,7 +86,7 @@ module.exports.AxisY = class AxisY {
     }
 
     _getAxisTickG(tick) {
-        const tickG = createSvgElement('g', 'y-axis-tick', {}, {
+        const tickG = createSvgElement('g', 'y-axis-tick animate-to', {}, {
             'transform': this._getTickTransform(tick)
         });
 
@@ -106,14 +110,13 @@ module.exports.AxisY = class AxisY {
     }
 
     _getTicksRange() {
-        const step = this.opts.ticksTop * this.opts.maxY * this.opts.scaleFactor / this.opts.ticksNumber;
+        const step = this.opts.ticksTop * this.opts.intervalMaxY / this.opts.ticksNumber;
         const digitsAfterComma = this.opts.digitsAfterComma || step < 1 ? 1 : this.opts.digitsAfterComma;
 
         return Array.from(Array(this.opts.ticksNumber + 1), (x, index) => (index * step).toFixed(digitsAfterComma));
     }
 
     _getTickTransform(tick) {
-        // console.log(this.opts.scaleFactor, this.opts.height, tick, this.opts.height - tick, (this.opts.height - tick) / this.opts.scaleFactor);
-        return `translate(0, ${(this.opts.maxY - tick) / this.opts.scaleFactor}px)`;
+        return `translate(0, ${(1 - tick / this.opts.intervalMaxY) * this.opts.height}px)`;
     }
 };

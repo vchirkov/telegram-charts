@@ -166,7 +166,7 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getScaleContainerG() {
-        return createSvgElement('g', 'scale-container animate-transform');
+        return createSvgElement('g', 'scale-container animate-t');
     }
 
     _getBgG() {

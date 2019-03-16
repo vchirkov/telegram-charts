@@ -124,7 +124,7 @@ module.exports.Chart = class Chart {
     }
 
     _getVerticalTransformG() {
-        return createSvgElement('g', 'vertical-transform animate-transform');
+        return createSvgElement('g', 'vertical-transform animate-t');
     }
 
     _getHorizontalTransformG() {

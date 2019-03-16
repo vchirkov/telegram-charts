@@ -53,7 +53,7 @@ module.exports.Path = class Path {
     }
 
     _getPath() {
-        return createSvgElement('path', 'y-path animate-opacity', {
+        return createSvgElement('path', 'y-path animate-o', {
             'fill': 'none',
             'vector-effect': 'non-scaling-stroke',
             'd': this.opts.d,

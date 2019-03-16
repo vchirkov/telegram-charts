@@ -3,10 +3,14 @@
     flex-direction: column;
 }
 
-.animate-transform {
+.animate-t {
     transition: transform 0.25s ease;
 }
 
-.animate-opacity {
+.animate-o {
     transition: opacity 0.25s ease;
+}
+
+.animate-to {
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
