@@ -17,9 +17,7 @@ const DEFAULTS = {
     overflowOpacity: 0.06,
     controlsOpacity: 0.2,
     navColor: '#339',
-    minY: 0,
     maxY: 0,
-    minX: 0,
     maxX: 0
 };
 
@@ -132,10 +130,10 @@ class Navigation extends SimpleEventEmitter {
     }
 
     rerenderBaseDimensions() {
-        const scaleX = this.opts.width / (this.opts.maxX - this.opts.minX);
-        const scaleY = this.opts.height / (this.opts.maxY - this.opts.minY);
+        const scaleX = this.opts.width / this.opts.maxX;
+        const scaleY = this.opts.height / this.opts.maxY;
 
-        this.bgG.style.transform = `scale(${scaleX},${scaleY}) translate(-${this.opts.minX}px,0)`;
+        this.bgG.style.transform = `scale(${scaleX},${scaleY})`;
     }
 
     _combine() {

@@ -4,7 +4,7 @@ const {Chart} = require('../Chart/Chart');
 const {Navigation} = require('../Navigation/Navigation');
 const {Path} = require('../Path/Path');
 const {Legend} = require('../Legend/Legend');
-const {AxisY} = require('../AxisY/AxisY');
+// const {AxisY} = require('../AxisY/AxisY');
 
 require('./followers-chart.css');
 
@@ -47,14 +47,14 @@ class FollowersChart {
 
         this.x = x;
         this.y = y;
-        this.xDays = this.x.map(i => i / DAY);
+        this.xDays = this.x.map(i => (i - this.x[0]) / DAY);
 
         this.maxY = this._getMaxY();
 
         this.intervalMaxY = this._getIntervalMaxY();
 
         this.chart = this._getChart();
-        this.axisY = this._getAxisY();
+        // this.axisY = this._getAxisY();
         this.nav = this._getNav();
         this.legend = this._getLegend();
 
@@ -104,7 +104,7 @@ class FollowersChart {
             const scaleFactor = this.intervalMaxY / this.maxY;
 
             this.chart.update({scaleFactor});
-            this.axisY.update({scaleFactor});
+            // this.axisY.update({scaleFactor});
         });
 
         this.legend.on(Legend.ON_COL_TOGGLE, col => {
@@ -130,7 +130,7 @@ class FollowersChart {
         this.containerDiv.appendChild(this.nav.getRoot());
         this.containerDiv.appendChild(this.legend.getRoot());
 
-        this.chart.addBeforeBackground(this.axisY.getRoot());
+        // this.chart.addBeforeBackground(this.axisY.getRoot());
 
         this.chartPaths.forEach(path => this.chart.addToBackground(path.getRoot()));
         this.navPaths.forEach(path => this.nav.addToBackground(path.getRoot()));
@@ -146,16 +146,14 @@ class FollowersChart {
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd,
             maxY: this.maxY,
-            minX: this.xDays[0],
             maxX: this.xDays[this.xDays.length - 1]
         });
     }
 
     _getAxisY() {
         return new AxisY({
-            width: this.opts.width,
-            height: this.opts.chartHeight,
-            maxY: this.intervalMaxY,
+            maxY: this.maxY,
+            maxX: this.xDays[this.xDays.length - 1],
             scaleFactor: this.intervalMaxY / this.maxY
         });
     }
@@ -170,7 +168,6 @@ class FollowersChart {
             intervalEnd: this.opts.intervalEnd,
             minInterval: this.opts.minInterval,
             maxY: this.maxY,
-            minX: this.xDays[0],
             maxX: this.xDays[this.xDays.length - 1]
         });
     }

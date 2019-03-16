@@ -6,9 +6,7 @@ const DEFAULTS = {
     scaleFactor: 1,
     intervalStart: 0,
     intervalEnd: 1,
-    minY: 0,
     maxY: 0,
-    minX: 0,
     maxX: 0
 };
 
@@ -20,6 +18,7 @@ module.exports.Chart = class Chart {
         this.verticalTransfromG = this._getVerticalTransformG();
         this.horizontalTransformG = this._getHorizontalTransformG();
 
+        this.baseDimensionG = this._getBaseDimensionG();
         this.bgG = this._getBgG();
         this.beforeBgG = this._getBeforeBgG();
         this.afterBgG = this._getAfterBgG();
@@ -34,11 +33,13 @@ module.exports.Chart = class Chart {
 
     update({intervalStart, intervalEnd, scaleFactor}) {
         if (intervalStart || intervalEnd) {
-            this.opts.intervalStart = intervalStart;
-            this.opts.intervalEnd = intervalEnd;
-            this.rerenderTransformX();
+            if (this.opts.intervalStart !== intervalStart || this.opts.intervalEnd !== intervalEnd) {
+                this.opts.intervalStart = intervalStart;
+                this.opts.intervalEnd = intervalEnd;
+                this.rerenderTransformX();
+            }
         }
-        if (scaleFactor) {
+        if (scaleFactor && this.opts.scaleFactor !== scaleFactor) {
             this.opts.scaleFactor = scaleFactor;
             this.rerenderTransfromY();
         }
@@ -65,10 +66,10 @@ module.exports.Chart = class Chart {
     }
 
     rerenderBaseDimensions() {
-        const scaleX = this.opts.width / (this.opts.maxX - this.opts.minX);
-        const scaleY = this.opts.height / (this.opts.maxY - this.opts.minY);
+        const scaleX = this.opts.width / this.opts.maxX;
+        const scaleY = this.opts.height / this.opts.maxY;
 
-        this.bgG.style.transform = `scale(${scaleX},${scaleY}) translate(-${this.opts.minX}px,0)`;
+        this.baseDimensionG.style.transform = `scale(${scaleX},${scaleY})`;
     }
 
     rerenderTransfromY() {
@@ -77,26 +78,26 @@ module.exports.Chart = class Chart {
         }
 
         const scaleY = 1 / this.opts.scaleFactor;
-        const translateY = (this.opts.scaleFactor - 1) * this.opts.height * scaleY;
+        const translateY = (this.opts.scaleFactor - 1) * this.opts.maxY * scaleY;
 
         this.verticalTransfromG.style.transform = `translate(0,${translateY}px) scale(1,${scaleY})`;
     }
 
     rerenderTransformX() {
         const scaleX = 1 / (this.opts.intervalEnd - this.opts.intervalStart);
-        const translateX = -this.opts.intervalStart * this.opts.width;
+        const translateX = -this.opts.intervalStart * this.opts.maxX;
 
-        this.horizontalTransformG.style.transform = `scale(${scaleX},1) translate(${translateX}px,0)`;
+        this.horizontalTransformG.style.transform = ` scale(${scaleX},1) translate(${translateX}px,0)`;
     }
 
     _combine() {
+        this.baseDimensionG.appendChild(this.horizontalTransformG);
         this.horizontalTransformG.appendChild(this.verticalTransfromG);
-        this.verticalTransfromG.appendChild(this.beforeBgG);
         this.verticalTransfromG.appendChild(this.bgG);
-        this.verticalTransfromG.appendChild(this.afterBgG);
 
-
-        this.chartSvg.appendChild(this.horizontalTransformG);
+        this.chartSvg.appendChild(this.beforeBgG);
+        this.chartSvg.appendChild(this.baseDimensionG);
+        this.chartSvg.appendChild(this.afterBgG);
     }
 
     _getChartSvg() {
@@ -108,6 +109,10 @@ module.exports.Chart = class Chart {
 
     _getBgG() {
         return createSvgElement('g', 'bg');
+    }
+
+    _getBaseDimensionG() {
+        return createSvgElement('g', 'base-dimension');
     }
 
     _getBeforeBgG() {

@@ -1,9 +1,8 @@
 const {createSvgElement} = require('../utils/createElement');
 
 const DEFAULTS = {
-    width: 600,
-    height: 400,
-    maxY: 1,
+    maxY: 0,
+    maxX: 0,
     scaleFactor: 1,
     ticksNumber: 5,
     ticksTop: 0.8,
@@ -35,12 +34,17 @@ module.exports.AxisY = class AxisY {
     }
 
     rerender() {
+        this.rerenderTicks();
+    }
+
+    rerenderTicks() {
         const ticksArr = this._getTicksRange();
         const ticks = {};
 
         ticksArr.forEach(tick => {
             if (this.ticks[tick]) {
                 ticks[tick] = this.ticks[tick];
+                ticks[tick].style.transform = this._getTickTransform(tick);
             } else {
                 ticks[tick] = this._getAxisTickG(tick);
                 this._addAxisTickG(ticks[tick]);
@@ -78,17 +82,19 @@ module.exports.AxisY = class AxisY {
     }
 
     _getAxisTickG(tick) {
-        const tickG = createSvgElement('g', 'y-axis-tick', {
+        const tickG = createSvgElement('g', 'y-axis-tick', {}, {
             'transform': this._getTickTransform(tick)
         });
 
         const line = createSvgElement('line', 'y-axis-tick-line', {
             'stroke': this.opts.color,
+            'vector-effect': 'non-scaling-stroke',
             'x2': this.opts.width
         });
 
         const text = createSvgElement('text', 'y-axis-tick-text', {
-            'y': -this.opts.textOffset
+            'y': -this.opts.textOffset,
+            'vector-effect': 'non-scaling-stroke'
         });
 
         text.appendChild(document.createTextNode(tick));
@@ -107,6 +113,7 @@ module.exports.AxisY = class AxisY {
     }
 
     _getTickTransform(tick) {
-        return `translate(0, ${(1 - tick / this.opts.maxY)})`;
+        // console.log(this.opts.scaleFactor, this.opts.height, tick, this.opts.height - tick, (this.opts.height - tick) / this.opts.scaleFactor);
+        return `translate(0, ${(this.opts.maxY - tick) / this.opts.scaleFactor}px)`;
     }
 };
