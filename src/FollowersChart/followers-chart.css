@@ -12,5 +12,5 @@
 }
 
 .animate-to {
-    transition: transform 0.25s ease, opacity 0.25s ease;
+    transition: transform 0.25s ease, opacity 0.125s ease;
 }

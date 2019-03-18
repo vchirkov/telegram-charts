@@ -33,19 +33,64 @@ module.exports.AxisY = class AxisY {
         if (this.opts.intervalMaxY === intervalMaxY) {
             return;
         }
+        //prep
+        const prevIntervalMaxY = this.opts.intervalMaxY;
+        const newIntervalMaxY = intervalMaxY;
+
+        // ticks prep
+        const oldTicks = this.ticks;
+        const newTicks = this.getNewTicks(newIntervalMaxY, prevIntervalMaxY);
+
+        const unitedTicks = Object.assign({}, newTicks, oldTicks);
+
+        // append ticks
+        for (let tick in newTicks) {
+            oldTicks[tick] || this._addAxisTickG(newTicks[tick]);
+        }
+
+        //animate ticks
+        setTimeout(() => {
+            for (let tick in unitedTicks) {
+                unitedTicks[tick].style.transform = this._getTickTransform(tick);
+                if (oldTicks[tick] && !newTicks[tick]) {
+                    oldTicks[tick].style.opacity = 0;
+                    oldTicks[tick].addEventListener('transitionend', ({target}) => {
+                        target.parentNode.removeChild(target);
+                    }, {once: true});
+                } else {
+                    unitedTicks[tick].style.opacity = 1;
+                }
+            }
+            this.ticks = newTicks;
+        });
+
+        //finish update
         this.opts.intervalMaxY = intervalMaxY;
-        this.rerender();
     }
 
     rerender() {
         this.rerenderTicks();
     }
 
+    getNewTicks(intervalMaxY, prevIntervalMaxY) {
+        const ticksRange = this._getTicksRange(intervalMaxY);
+
+        return ticksRange.reduce((ticks, tick) => {
+            if (!this.ticks[tick]) {
+                ticks[tick] = this._getAxisTickG(tick, prevIntervalMaxY);
+                ticks[tick].style.opacity = 0;
+            } else {
+                ticks[tick] = this.ticks[tick];
+            }
+            return ticks;
+        }, {});
+    }
+
     rerenderTicks() {
-        const ticksArr = this._getTicksRange();
+        const ticksRange = this._getTicksRange();
         const ticks = {};
 
-        ticksArr.forEach(tick => {
+        ticksRange.forEach(tick => {
             if (this.ticks[tick]) {
                 ticks[tick] = this.ticks[tick];
                 ticks[tick].style.transform = this._getTickTransform(tick);
@@ -85,9 +130,9 @@ module.exports.AxisY = class AxisY {
         return createSvgElement('g', 'y-axis-container');
     }
 
-    _getAxisTickG(tick) {
+    _getAxisTickG(tick, intervalMaxY = this.opts.intervalMaxY) {
         const tickG = createSvgElement('g', 'y-axis-tick animate-to', {}, {
-            'transform': this._getTickTransform(tick)
+            'transform': this._getTickTransform(tick, intervalMaxY)
         });
 
         const line = createSvgElement('line', 'y-axis-tick-line', {
@@ -109,14 +154,14 @@ module.exports.AxisY = class AxisY {
         return tickG;
     }
 
-    _getTicksRange() {
-        const step = this.opts.ticksTop * this.opts.intervalMaxY / this.opts.ticksNumber;
+    _getTicksRange(intervalMaxY = this.opts.intervalMaxY) {
+        const step = this.opts.ticksTop * intervalMaxY / this.opts.ticksNumber;
         const digitsAfterComma = this.opts.digitsAfterComma || step < 1 ? 1 : this.opts.digitsAfterComma;
 
         return Array.from(Array(this.opts.ticksNumber + 1), (x, index) => (index * step).toFixed(digitsAfterComma));
     }
 
-    _getTickTransform(tick) {
-        return `translate(0, ${(1 - tick / this.opts.intervalMaxY) * this.opts.height}px)`;
+    _getTickTransform(tick, intervalMaxY = this.opts.intervalMaxY) {
+        return `translate(0, ${(1 - tick / intervalMaxY) * this.opts.height}px)`;
     }
 };
