@@ -18,9 +18,10 @@ module.exports.drag = function drag(el, cbChange = noop, cbEnd = noop) {
 
         let onmouseup = (e) => {
             e.preventDefault();
-            cbEnd();
             document.removeEventListener('mousemove', onmousemove);
             document.removeEventListener('mouseup', onmouseup);
+
+            cbEnd();
         };
 
         document.addEventListener('mousemove', onmousemove);

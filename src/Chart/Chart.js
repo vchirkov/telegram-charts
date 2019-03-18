@@ -3,6 +3,7 @@ const {createSvgElement} = require('../utils/createElement');
 const DEFAULTS = {
     width: 600,
     height: 400,
+    xAxisHeight: 0,
     scaleFactor: 1,
     intervalStart: 0,
     intervalEnd: 1,
@@ -59,6 +60,13 @@ module.exports.Chart = class Chart {
         this.bgG.appendChild(el);
     }
 
+    addAfterBackground(el) {
+        if (!el) {
+            return;
+        }
+        this.afterBgG.appendChild(el);
+    }
+
     rerender() {
         this.rerenderTransformX();
         this.rerenderTransfromY();
@@ -103,7 +111,7 @@ module.exports.Chart = class Chart {
     _getChartSvg() {
         return createSvgElement('svg', 'chart', {
             'width': this.opts.width,
-            'height': this.opts.height
+            'height': this.opts.height + this.opts.xAxisHeight
         });
     }
 
