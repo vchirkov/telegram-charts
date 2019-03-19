@@ -1,31 +1,12 @@
-const DEBOUNCE_DURRATION = 100;
+const DEBOUNCE_DURRATION = 200;
 
 module.exports.debounce = function debounce(fn, ms = DEBOUNCE_DURRATION) {
-    return (...args) => {
-        if (!fn.debouncing) {
-            fn.lastReturnVal = fn.apply(window, args);
-            fn.debouncing = true;
-        }
-        clearTimeout(fn.debounceTimeout);
-        fn.debounceTimeout = setTimeout(() => fn.debouncing = false, ms);
-        return fn.lastReturnVal;
+    let timeout = null;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(context, args), ms)
     }
 };
 
-// function debounce(fn, ms = DEBOUNCE_DURRATION) {
-//
-//     let timer = null;
-//
-//     return function (...args) {
-//         const onComplete = () => {
-//             fn.apply(this, args);
-//             timer = null;
-//         };
-//
-//         if (timer) {
-//             clearTimeout(timer);
-//         }
-//
-//         timer = setTimeout(onComplete, ms);
-//     };
-// }
+

@@ -13,7 +13,7 @@ const MONTHS = {
     11: 'Dec'
 };
 
-module.exports.monthDay = function monthShortDay(ts, short = true) {
+module.exports.monthDay = function monthShortDay(ts) {
     const date = new Date(ts);
-    return `${MONTHS[date.getMonth()]} ${date.getDay()}`;
+    return `${MONTHS[date.getMonth()]} ${date.getDate()}`;
 };
