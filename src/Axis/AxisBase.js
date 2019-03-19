@@ -2,11 +2,13 @@ const {createSvgElement} = require('../utils/createElement');
 const {SimpleEventEmitter} = require('../utils/SimpleEventEmitter');
 
 const DEFAULTS = {
-    min: 0,
     max: 0,
+    intervalStart: 0,
+    intervalEnd: 1,
     ticksNumber: 5,
     ticksTop: 0.9,
-    ticksBottom: 0
+    ticksBottom: 0,
+    className: 'animate-to'
 };
 
 
@@ -21,30 +23,29 @@ class AxisBase extends SimpleEventEmitter {
     }
 
     async init() {
-        this.rerender(this.opts.min, this.opts.max);
+        this.rerender(this.opts.intervalStart, this.opts.intervalEnd);
     }
 
-    async update({min = this.opts.min, max = this.opts.max}) {
-        if (this.opts.min === min &&
-            this.opts.max === max) {
+    async update({intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd}) {
+        if (this.opts.intervalStart === intervalStart &&
+            this.opts.intervalEnd === intervalEnd) {
             return;
         }
-
-        return this.rerender(min, max);
+        return this.rerender(intervalStart, intervalEnd);
     }
 
-    async rerender(min, max) {
+    async rerender(intervalStart, intervalEnd, animate = true) {
         // prep phase
         const prev = {
-            min: this.opts.min,
-            max: this.opts.max,
+            intervalStart: this.opts.intervalStart,
+            intervalEnd: this.opts.intervalEnd,
             ticks: this.ticks
         };
 
         const next = {
-            min,
-            max,
-            ticks: this._getNewTicks(min, max)
+            intervalStart,
+            intervalEnd,
+            ticks: this._getNewTicks(intervalStart, intervalEnd)
         };
 
         const united = Object.assign({}, prev.ticks, next.ticks);
@@ -53,34 +54,45 @@ class AxisBase extends SimpleEventEmitter {
         Object.entries(next.ticks).map(([tick, generated]) => {
             prev.ticks[tick] || this.emit(AxisBase.ON_NEW_TICK_GENERATED, generated, tick);
         });
-
-        setTimeout(() => {
-            // animate phase
-            Object.entries(united).forEach(([tick, generated]) => {
-                const transform = this._transformFn(tick, next.min, next.max);
-                generated.forEach(svgEl => svgEl.style.transform = transform);
-                if (next.ticks[tick]) {
-                    generated.forEach(svgEl => svgEl.style.opacity = 1);
-                } else if (prev.ticks[tick]) {
-                    generated.forEach(svgEl => svgEl.style.opacity = 0);
-                    generated.forEach(svgEl => svgEl.addEventListener('transitionend', ({target}) => {
-                        target.parentNode.removeChild(target);
-                    }, {once: true}));
-                }
-            });
-        }, 1000 / 60);
+        // animate phase
+        if (animate) {
+            setTimeout(() => this._animate(united, next, prev), 1000 / 60);
+        } else {
+            this._animate(united, next, prev, false);
+        }
 
         //end phase
         this.ticks = next.ticks;
-        this.opts.min = next.min;
-        this.opts.max = next.max;
+        this.opts.intervalStart = next.intervalStart;
+        this.opts.intervalEnd = next.intervalEnd;
     }
 
-    _getNewTicks(min, max) {
-        const ticksRange = this._getTicksRange(min, max);
+    _animate(united, next, prev, animate = true) {
+        Object.entries(united).forEach(([tick, generated]) => {
+            const transform = this._transformFn(tick, next.intervalStart, next.intervalEnd);
+            generated.forEach(svgEl => svgEl.style.transform = transform);
+            if (next.ticks[tick]) {
+                generated.forEach(svgEl => svgEl.style.opacity = 1);
+            } else if (prev.ticks[tick]) {
+                generated.forEach(svgEl => svgEl.style.opacity = 0);
+                generated.forEach(svgEl => this._removeGeneratedElement(svgEl, animate), {once: true});
+            }
+        });
+    }
+
+    _removeGeneratedElement(svgEl, animate = true) {
+        if (animate) {
+            svgEl.addEventListener('transitionend', ({target}) => target.parentNode.removeChild(target));
+        } else {
+            svgEl.parentNode.removeChild(svgEl);
+        }
+    }
+
+    _getNewTicks(intervalStart, intervalEnd) {
+        const ticksRange = this._getTicksRange(intervalStart, intervalEnd);
         return ticksRange.reduce((ticks, tick) => {
             if (!this.ticks[tick]) {
-                const transform = this._transformFn(tick, this.opts.min, this.opts.max);
+                const transform = this._transformFn(tick, this.opts.intervalStart, this.opts.intervalEnd);
                 ticks[tick] = this._tickGenerators.map(gen => this._getTickG(gen(tick), transform));
             } else {
                 ticks[tick] = this.ticks[tick];
@@ -89,9 +101,9 @@ class AxisBase extends SimpleEventEmitter {
         }, {})
     }
 
-    _getTicksRange(min = this.opts.min, max = this.opts.max) {
-        const start = min + (max - min) * this.opts.ticksBottom;
-        const end = min + (max - min) * this.opts.ticksTop;
+    _getTicksRange(intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd) {
+        const start = intervalStart + (intervalEnd - intervalStart) * this.opts.ticksBottom * this.opts.max;
+        const end = intervalStart + (intervalEnd - intervalStart) * this.opts.ticksTop * this.opts.max;
         const interval = end - start;
 
         const step = interval / this.opts.ticksNumber;
@@ -101,7 +113,7 @@ class AxisBase extends SimpleEventEmitter {
     }
 
     _getTickG(generatedChild, transform) {
-        const g = createSvgElement('g', 'tick-container animate-to', {}, {
+        const g = createSvgElement('g', `tick-container ${this.opts.className}`, {}, {
             transform,
             opacity: 0
         });

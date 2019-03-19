@@ -14,11 +14,12 @@ const DEFAULTS = {
     intervalStart: 0.8,
     intervalEnd: 1,
     minInterval: 0.1,
-    overflowOpacity: 0.06,
-    controlsOpacity: 0.2,
-    navColor: '#339',
+    overflowOpacity: 0.04,
+    controlsOpacity: 0.12,
+    navColor: '#30A3F0',
     maxY: 0,
-    maxX: 0
+    maxX: 0,
+    padding: 2,
 };
 
 /**
@@ -40,7 +41,7 @@ const DEFAULTS = {
  *              rect.nav-control.nav-end-control
  *
  *  @event Navigation.ON_INTERVAL_CHANGE
- *  @event Navigation.ON_INTERVAL_CHANGE_END
+ *  @event Navigation.ON_INTERVAL_CHANGE_PAUSE
  *
  *  @method getRoot(): rootElement
  *  @method update({scaleFactor}): void
@@ -159,9 +160,10 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getBgContainerG() {
-        const scaleY = 1 - 2 * this.opts.controlBorderWidth / this.opts.height;
+        const padding = this.opts.padding + this.opts.controlBorderWidth;
+        const scaleY = 1 - 2 * padding / this.opts.height;
         return createSvgElement('g', 'bg-container', {
-            'transform': `translate(0, ${this.opts.controlBorderWidth}) scale(1,${scaleY})`
+            'transform': `scale(1,${scaleY}) translate(0, ${padding})`
         });
     }
 
@@ -274,7 +276,7 @@ class Navigation extends SimpleEventEmitter {
 
             this._emitIntervalChange();
             this.rerenderNavigation();
-        }, () => this._emitIntervalChangeEnd());
+        }, () => this._emitIntervalChangePause());
 
         return rect;
     }
@@ -293,7 +295,7 @@ class Navigation extends SimpleEventEmitter {
 
             this._emitIntervalChange();
             this.rerenderNavigation();
-        }, () => this._emitIntervalChangeEnd());
+        }, () => this._emitIntervalChangePause());
 
         return rect;
     }
@@ -312,7 +314,7 @@ class Navigation extends SimpleEventEmitter {
 
             this._emitIntervalChange();
             this.rerenderNavigation();
-        }, () => this._emitIntervalChangeEnd());
+        }, () => this._emitIntervalChangePause());
 
         return rect;
     }
@@ -324,8 +326,8 @@ class Navigation extends SimpleEventEmitter {
         });
     }
 
-    _emitIntervalChangeEnd() {
-        this.emit(Navigation.ON_INTERVAL_CHANGE_END, {
+    _emitIntervalChangePause() {
+        this.emit(Navigation.ON_INTERVAL_CHANGE_PAUSE, {
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd
         });
@@ -333,6 +335,6 @@ class Navigation extends SimpleEventEmitter {
 }
 
 Navigation.ON_INTERVAL_CHANGE = 'ON_INTERVAL_CHANGE';
-Navigation.ON_INTERVAL_CHANGE_END = 'ON_INTERVAL_CHANGE_END';
+Navigation.ON_INTERVAL_CHANGE_PAUSE = 'ON_INTERVAL_CHANGE_PAUSE';
 
 module.exports.Navigation = Navigation;

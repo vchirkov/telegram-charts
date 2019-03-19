@@ -4,8 +4,9 @@ const {Chart} = require('../Chart/Chart');
 const {Navigation} = require('../Navigation/Navigation');
 const {Path} = require('../Path/Path');
 const {Legend} = require('../Legend/Legend');
-const {AxisY} = require('../Axis/AxisY');
-const {AxisX} = require('../Axis/AxisX');
+const {AxisY} = require('../Axis/AxisY/AxisY');
+const {AxisX} = require('../Axis/AxisX/AxisX');
+// const {TooltipRenderer} = require('../Axis/TooltipRenderer/TooltipRenderer');
 
 require('./followers-chart.css');
 
@@ -14,13 +15,13 @@ const DAY = 24 * 60 * 60 * 1000;
 const DEFAULTS = {
     width: 600,
     chartHeight: 400,
-    navHeight: 100,
+    navHeight: 80,
     navPadding: 2,
     xAxisHeight: 30,
     strokeWidth: 2,
     ticksX: 5,
     ticksY: 5,
-    intervalStart: 0.8,
+    intervalStart: 0.75,
     intervalEnd: 1,
     minInterval: 0.15
 };
@@ -49,8 +50,8 @@ class FollowersChart {
         this.x = x;
         this.y = y;
         this.xDays = this.x.map(i => (i - this.x[0]) / DAY);
-        this.xDaysMin = this.xDays[0];
         this.xDaysMax = this.xDays[this.xDays.length - 1];
+        this.startDay = this.x[0] / DAY;
 
         this.maxY = this._getMaxY();
         this.intervalMaxY = this._getIntervalMaxY();
@@ -58,6 +59,7 @@ class FollowersChart {
         this.chart = this._getChart();
         this.axisY = this._getAxisY();
         this.axisX = this._getAxisX();
+        // this.tooltip = this._getTooltip();
         this.nav = this._getNav();
         this.legend = this._getLegend();
 
@@ -75,6 +77,7 @@ class FollowersChart {
     init() {
         this.axisY.init();
         this.axisX.init();
+        // this.tooltip.init();
     }
 
     getRoot() {
@@ -105,19 +108,17 @@ class FollowersChart {
             Object.assign(this.opts, {intervalStart, intervalEnd});
 
             this.chart.update({intervalStart, intervalEnd});
-            this.axisX.update({
-                min: this.opts.intervalStart * this.xDaysMax,
-                max: this.opts.intervalEnd * this.xDaysMax
-            });
+            this.axisX.update({intervalStart, intervalEnd});
+            // this.tooltip.update({intervalStart, intervalEnd});
         });
 
-        this.nav.on(Navigation.ON_INTERVAL_CHANGE_END, () => {
+        this.nav.on(Navigation.ON_INTERVAL_CHANGE_PAUSE, () => {
             this.intervalMaxY = this._getIntervalMaxY();
 
             const scaleFactor = this.intervalMaxY / this.maxY;
 
             this.chart.update({scaleFactor});
-            this.axisY.update({max: this.intervalMaxY});
+            this.axisY.update({intervalEnd: this.intervalMaxY / this.maxY});
         });
 
         this.legend.on(Legend.ON_COL_TOGGLE, col => {
@@ -130,17 +131,12 @@ class FollowersChart {
             this.intervalMaxY = intervalMaxY;
 
             this.legend.update(column);
-            this.axisY.update({max: intervalMaxY});
+            this.axisY.update({intervalEnd: intervalMaxY / this.maxY});
             this.chart.update({scaleFactor: intervalMaxY / this.maxY});
             this.nav.update({scaleFactor: visibleMaxY / this.maxY});
 
             this.chartYs.find(({id}) => col.id === id).update({visible: col.visible});
             this.navYs.find(({id}) => col.id === id).update({visible: col.visible});
-        });
-
-        this.axisY.on(AxisY.ON_NEW_TICK_GENERATED, ([lineG, textG]) => {
-            this.chart.addBeforeBackground(lineG);
-            this.chart.addAfterBackground(textG);
         });
     }
 
@@ -149,7 +145,10 @@ class FollowersChart {
         this.containerDiv.appendChild(this.nav.getRoot());
         this.containerDiv.appendChild(this.legend.getRoot());
 
+        this.chart.addBeforeBackground(this.axisY.getLinesRoot());
+        this.chart.addAfterBackground(this.axisY.getTitlesRoot());
         this.chart.addAfterBackground(this.axisX.getRoot());
+        // this.chart.addAfterBackground(this.tooltip.getRoot());
 
         this.chartYs.forEach(path => this.chart.addToBackground(path.getRoot()));
         this.navYs.forEach(path => this.nav.addToBackground(path.getRoot()));
@@ -174,7 +173,8 @@ class FollowersChart {
         return new AxisY({
             width: this.opts.width,
             height: this.opts.chartHeight,
-            max: this.intervalMaxY
+            max: this.maxY,
+            intervalEnd: this.intervalMaxY / this.maxY
         });
     }
 
@@ -183,11 +183,23 @@ class FollowersChart {
             y: this.opts.chartHeight,
             height: this.opts.xAxisHeight,
             width: this.opts.width,
-            min: this.opts.intervalStart * this.xDaysMax,
-            max: this.opts.intervalEnd * this.xDaysMax,
-            xDaysMin: this.xDaysMin
+            max: this.xDaysMax,
+            intervalStart: this.opts.intervalStart,
+            intervalEnd: this.opts.intervalEnd,
+            startDay: this.startDay
         });
     }
+
+    // _getTooltip() {
+    //     return new Tooltip({
+    //         height: this.opts.chartHeight,
+    //         width: this.opts.width,
+    //         max: this.xDaysMax,
+    //         intervalStart: this.opts.intervalStart,
+    //         intervalEnd: this.opts.intervalEnd,
+    //         startDay: this.startDay
+    //     });
+    // }
 
     _getNav() {
         return new Navigation({

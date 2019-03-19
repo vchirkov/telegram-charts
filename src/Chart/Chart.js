@@ -7,6 +7,7 @@ const DEFAULTS = {
     scaleFactor: 1,
     intervalStart: 0,
     intervalEnd: 1,
+    padding: 2,
     maxY: 0,
     maxX: 0
 };
@@ -15,14 +16,22 @@ module.exports.Chart = class Chart {
     constructor(opts) {
         this.opts = Object.assign({}, DEFAULTS, opts);
 
-        this.chartSvg = this._getChartSvg();
-        this.verticalTransfromG = this._getVerticalTransformG();
-        this.horizontalTransformG = this._getHorizontalTransformG();
+        this.chartSvg = createSvgElement('svg', 'chart', {
+            'width': this.opts.width,
+            'height': this.opts.height + this.opts.xAxisHeight + this.opts.padding * 2
+        });
 
-        this.baseDimensionG = this._getBaseDimensionG();
-        this.bgG = this._getBgG();
-        this.beforeBgG = this._getBeforeBgG();
-        this.afterBgG = this._getAfterBgG();
+        this.chartContainerG = createSvgElement('g', 'chart-container', {
+            'transform': `translate(0,${this.opts.padding})`
+        });
+
+        this.bgG = createSvgElement('g', 'bg');
+        this.baseDimensionG = createSvgElement('g', 'base-dimension');
+        this.beforeBgG = createSvgElement('g', 'before-bg');
+        this.afterBgG = createSvgElement('g', 'after-bg');
+
+        this.verticalTransfromG = createSvgElement('g', 'vertical-transform animate-t');
+        this.horizontalTransformG = createSvgElement('g', 'horizontal-transform');
 
         this.rerender();
         this._combine();
@@ -103,39 +112,9 @@ module.exports.Chart = class Chart {
         this.horizontalTransformG.appendChild(this.verticalTransfromG);
         this.verticalTransfromG.appendChild(this.bgG);
 
-        this.chartSvg.appendChild(this.beforeBgG);
-        this.chartSvg.appendChild(this.baseDimensionG);
-        this.chartSvg.appendChild(this.afterBgG);
-    }
-
-    _getChartSvg() {
-        return createSvgElement('svg', 'chart', {
-            'width': this.opts.width,
-            'height': this.opts.height + this.opts.xAxisHeight
-        });
-    }
-
-    _getBgG() {
-        return createSvgElement('g', 'bg');
-    }
-
-    _getBaseDimensionG() {
-        return createSvgElement('g', 'base-dimension');
-    }
-
-    _getBeforeBgG() {
-        return createSvgElement('g', 'before-bg');
-    }
-
-    _getAfterBgG() {
-        return createSvgElement('g', 'after-bg');
-    }
-
-    _getVerticalTransformG() {
-        return createSvgElement('g', 'vertical-transform animate-t');
-    }
-
-    _getHorizontalTransformG() {
-        return createSvgElement('g', 'horizontal-transform');
+        this.chartContainerG.appendChild(this.beforeBgG);
+        this.chartContainerG.appendChild(this.baseDimensionG);
+        this.chartContainerG.appendChild(this.afterBgG);
+        this.chartSvg.appendChild(this.chartContainerG);
     }
 };

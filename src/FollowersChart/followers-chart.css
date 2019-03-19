@@ -14,3 +14,7 @@
 .animate-to {
     transition: transform 0.25s ease, opacity 0.125s ease;
 }
+
+.followers-chart {
+    font-family: "Open Sans";
+}

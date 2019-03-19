@@ -1,5 +1,6 @@
 .legend {
     display: flex;
+    margin: 16px 0;
 }
 
 .legend .legend-item {
@@ -60,4 +61,6 @@
 
 .legend .legend-item-name {
     margin-right: 4px;
+    font-size: 12px;
+    color: #43484B;
 }

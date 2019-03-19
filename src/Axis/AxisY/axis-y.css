@@ -1,0 +1,8 @@
+.y-axis-tick-line {
+    stroke: #F2F4F5;
+}
+
+.y-axis-tick-text {
+    fill: #96A2AA;
+    font-size: 10px;
+}

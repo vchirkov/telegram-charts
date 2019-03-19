@@ -76,12 +76,12 @@ class Legend extends SimpleEventEmitter {
 
         nameSpan.innerText = col.name;
 
-        legendDiv.addEventListener('click', () => this.emit(Legend.ON_COL_TOGGLE, col));
-
         iconContainer.appendChild(icon);
 
         legendDiv.appendChild(iconContainer);
         legendDiv.appendChild(nameSpan);
+
+        legendDiv.addEventListener('click', () => this.emit(Legend.ON_COL_TOGGLE, col));
 
         return legendDiv;
     }
