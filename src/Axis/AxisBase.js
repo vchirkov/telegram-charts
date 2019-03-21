@@ -1,4 +1,4 @@
-const {createSvgElement} = require('../utils/createElement');
+const {createSVGElement} = require('../utils/createElement');
 const {SimpleEventEmitter} = require('../utils/SimpleEventEmitter');
 
 const DEFAULTS = {
@@ -90,10 +90,10 @@ class AxisBase extends SimpleEventEmitter {
 
     _getNewTicks(intervalStart, intervalEnd) {
         const ticksRange = this._getTicksRange(intervalStart, intervalEnd);
-        return ticksRange.reduce((ticks, tick) => {
+        return ticksRange.reduce((ticks, tick, index) => {
             if (!this.ticks[tick]) {
                 const transform = this._transformFn(tick, this.opts.intervalStart, this.opts.intervalEnd);
-                ticks[tick] = this._tickGenerators.map(gen => this._getTickG(gen(tick), transform));
+                ticks[tick] = this._tickGenerators.map(gen => this._getTickG(gen(tick, index), transform));
             } else {
                 ticks[tick] = this.ticks[tick];
             }
@@ -113,7 +113,7 @@ class AxisBase extends SimpleEventEmitter {
     }
 
     _getTickG(generatedChild, transform) {
-        const g = createSvgElement('g', `tick-container ${this.opts.className}`, {}, {
+        const g = createSVGElement('g', `tick-container ${this.opts.className}`, {}, {
             transform,
             opacity: 0
         });

@@ -1,4 +1,4 @@
-const {createSvgElement} = require('../utils/createElement');
+const {createSVGElement} = require('../utils/createElement');
 const {pathD} = require('../utils/pathD');
 
 const DEFAULTS = {
@@ -53,7 +53,7 @@ module.exports.Path = class Path {
     }
 
     _getPath() {
-        return createSvgElement('path', 'y-path animate-o', {
+        return createSVGElement('path', 'y-path animate-o', {
             'fill': 'none',
             'vector-effect': 'non-scaling-stroke',
             'd': this.opts.d,
@@ -63,6 +63,6 @@ module.exports.Path = class Path {
     }
 
     _getPathG() {
-        return createSvgElement('g', 'y-path-container');
+        return createSVGElement('g', 'y-path-container');
     }
 };

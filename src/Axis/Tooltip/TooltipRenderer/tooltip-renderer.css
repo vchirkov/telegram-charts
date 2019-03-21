@@ -1,0 +1,5 @@
+.tooltip-carrier {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+}

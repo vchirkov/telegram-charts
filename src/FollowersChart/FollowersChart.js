@@ -6,7 +6,8 @@ const {Path} = require('../Path/Path');
 const {Legend} = require('../Legend/Legend');
 const {AxisY} = require('../Axis/AxisY/AxisY');
 const {AxisX} = require('../Axis/AxisX/AxisX');
-// const {TooltipRenderer} = require('../Axis/TooltipRenderer/TooltipRenderer');
+const {TooltipRenderer} = require('../Axis/Tooltip/TooltipRenderer/TooltipRenderer');
+const {Tooltip} = require('../Axis/Tooltip/Tooltip/Tooltip');
 
 require('./followers-chart.css');
 
@@ -59,7 +60,8 @@ class FollowersChart {
         this.chart = this._getChart();
         this.axisY = this._getAxisY();
         this.axisX = this._getAxisX();
-        // this.tooltip = this._getTooltip();
+        this.tooltip = this._getTooltip();
+        this.tooltipRenderer = this._getTooltipRenderer();
         this.nav = this._getNav();
         this.legend = this._getLegend();
 
@@ -77,7 +79,7 @@ class FollowersChart {
     init() {
         this.axisY.init();
         this.axisX.init();
-        // this.tooltip.init();
+        this.tooltipRenderer.init();
     }
 
     getRoot() {
@@ -109,7 +111,7 @@ class FollowersChart {
 
             this.chart.update({intervalStart, intervalEnd});
             this.axisX.update({intervalStart, intervalEnd});
-            // this.tooltip.update({intervalStart, intervalEnd});
+            this.tooltipRenderer.update({intervalStart, intervalEnd});
         });
 
         this.nav.on(Navigation.ON_INTERVAL_CHANGE_PAUSE, () => {
@@ -119,6 +121,7 @@ class FollowersChart {
 
             this.chart.update({scaleFactor});
             this.axisY.update({intervalEnd: this.intervalMaxY / this.maxY});
+            this.tooltip.update({intervalMaxY: this.intervalMaxY})
         });
 
         this.legend.on(Legend.ON_COL_TOGGLE, col => {
@@ -134,6 +137,7 @@ class FollowersChart {
             this.axisY.update({intervalEnd: intervalMaxY / this.maxY});
             this.chart.update({scaleFactor: intervalMaxY / this.maxY});
             this.nav.update({scaleFactor: visibleMaxY / this.maxY});
+            this.tooltip.update({intervalMaxY});
 
             this.chartYs.find(({id}) => col.id === id).update({visible: col.visible});
             this.navYs.find(({id}) => col.id === id).update({visible: col.visible});
@@ -148,7 +152,7 @@ class FollowersChart {
         this.chart.addBeforeBackground(this.axisY.getLinesRoot());
         this.chart.addAfterBackground(this.axisY.getTitlesRoot());
         this.chart.addAfterBackground(this.axisX.getRoot());
-        // this.chart.addAfterBackground(this.tooltip.getRoot());
+        this.chart.addAfterBackground(this.tooltipRenderer.getRoot());
 
         this.chartYs.forEach(path => this.chart.addToBackground(path.getRoot()));
         this.navYs.forEach(path => this.nav.addToBackground(path.getRoot()));
@@ -190,16 +194,25 @@ class FollowersChart {
         });
     }
 
-    // _getTooltip() {
-    //     return new Tooltip({
-    //         height: this.opts.chartHeight,
-    //         width: this.opts.width,
-    //         max: this.xDaysMax,
-    //         intervalStart: this.opts.intervalStart,
-    //         intervalEnd: this.opts.intervalEnd,
-    //         startDay: this.startDay
-    //     });
-    // }
+    _getTooltipRenderer() {
+        return new TooltipRenderer({
+            height: this.opts.chartHeight,
+            width: this.opts.width,
+            max: this.xDaysMax,
+            intervalStart: this.opts.intervalStart,
+            intervalEnd: this.opts.intervalEnd,
+            startDay: this.startDay
+        }, this.tooltip);
+    }
+
+    _getTooltip() {
+        return new Tooltip({
+            columns: this.y,
+            x: this.x,
+            height: this.opts.chartHeight,
+            intervalMaxY: this.intervalMaxY
+        });
+    }
 
     _getNav() {
         return new Navigation({

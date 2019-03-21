@@ -1,4 +1,4 @@
-const {createSvgElement} = require('../../utils/createElement');
+const {createSVGElement} = require('../../utils/createElement');
 const {AxisBase} = require('../AxisBase');
 
 require('./axis-y.css');
@@ -21,8 +21,8 @@ module.exports.AxisY = class AxisY extends AxisBase {
             ],
             (tick, intervalStart, intervalEnd) => this._getTickTransform(tick, intervalEnd));
 
-        this.linesG = createSvgElement('g', 'y-axis-lines-container');
-        this.titlesG = createSvgElement('g', 'y-axis-titles-container');
+        this.linesG = createSVGElement('g', 'y-axis-lines-container');
+        this.titlesG = createSVGElement('g', 'y-axis-titles-container');
 
         this.opts = Object.assign({}, DEFAULTS, this.opts, opts);
 
@@ -41,13 +41,13 @@ module.exports.AxisY = class AxisY extends AxisBase {
     }
 
     _getAxisTickLine() {
-        return createSvgElement('line', 'y-axis-tick-line', {
+        return createSVGElement('line', 'y-axis-tick-line', {
             'x2': this.opts.width
         });
     }
 
     _getAxisTickText(tick) {
-        const text = createSvgElement('text', 'y-axis-tick-text', {
+        const text = createSVGElement('text', 'y-axis-tick-text', {
             'y': -this.opts.textOffset
         });
 

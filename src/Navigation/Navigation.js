@@ -1,5 +1,5 @@
 const {SimpleEventEmitter} = require('../utils/SimpleEventEmitter');
-const {createSvgElement} = require('../utils/createElement');
+const {createSVGElement} = require('../utils/createElement');
 const {drag} = require('../utils/drag');
 const {puid} = require('../utils/puid');
 
@@ -153,7 +153,7 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getNavSvg() {
-        return createSvgElement('svg', 'nav', {
+        return createSVGElement('svg', 'nav', {
             'width': this.opts.width,
             'height': this.opts.height
         });
@@ -162,21 +162,21 @@ class Navigation extends SimpleEventEmitter {
     _getBgContainerG() {
         const padding = this.opts.padding + this.opts.controlBorderWidth;
         const scaleY = 1 - 2 * padding / this.opts.height;
-        return createSvgElement('g', 'bg-container', {
+        return createSVGElement('g', 'bg-container', {
             'transform': `scale(1,${scaleY}) translate(0, ${padding})`
         });
     }
 
     _getScaleContainerG() {
-        return createSvgElement('g', 'scale-container animate-t');
+        return createSVGElement('g', 'scale-container animate-t');
     }
 
     _getBgG() {
-        return createSvgElement('g', 'bg');
+        return createSVGElement('g', 'bg');
     }
 
     _getMask() {
-        const mask = createSvgElement('mask', 'nav-mask', {
+        const mask = createSVGElement('mask', 'nav-mask', {
             'id': this.maskId,
             'x': 0,
             'y': 0,
@@ -184,7 +184,7 @@ class Navigation extends SimpleEventEmitter {
             'height': this.opts.height
         });
 
-        const rect = createSvgElement('rect', 'mask-overflow', {
+        const rect = createSVGElement('rect', 'mask-overflow', {
             'x': 0,
             'y': 0,
             'width': this.opts.width,
@@ -199,9 +199,9 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getMaskRectG() {
-        const g = createSvgElement('g', 'mask-window-container');
+        const g = createSVGElement('g', 'mask-window-container');
 
-        const outerRect = createSvgElement('rect', 'mask-window-border', {
+        const outerRect = createSVGElement('rect', 'mask-window-border', {
             'x': 0,
             'y': 0,
             'width': this.opts.width,
@@ -209,7 +209,7 @@ class Navigation extends SimpleEventEmitter {
             'fill': '#fff'
         });
 
-        const innerRect = createSvgElement('rect', 'mask-window', {
+        const innerRect = createSVGElement('rect', 'mask-window', {
             'x': 0,
             'y': this.opts.controlBorderWidth,
             'width': this.opts.width,
@@ -224,9 +224,9 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getNavControlsG() {
-        const g = createSvgElement('g', 'nav-controls-container');
+        const g = createSVGElement('g', 'nav-controls-container');
 
-        const rect = createSvgElement('rect', 'mask-carrier', {
+        const rect = createSVGElement('rect', 'mask-carrier', {
             'x': 0,
             'y': 0,
             'fill': this.opts.navColor,
@@ -242,7 +242,7 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getNavControl(typeClassName = '') {
-        return createSvgElement('rect', `nav-control ${typeClassName}`, {
+        return createSVGElement('rect', `nav-control ${typeClassName}`, {
             'x': 0,
             'y': this.opts.controlBorderWidth,
             'height': this.opts.height - 2 * this.opts.controlBorderWidth,
@@ -256,7 +256,7 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getNavRect() {
-        const rect = createSvgElement('rect', 'nav-control nav-move-control', {
+        const rect = createSVGElement('rect', 'nav-control nav-move-control', {
             'x': 0,
             'y': 0,
             'width': this.opts.width,

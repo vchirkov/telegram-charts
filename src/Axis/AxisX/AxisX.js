@@ -1,6 +1,6 @@
-const {createSvgElement} = require('../../utils/createElement');
+const {createSVGElement} = require('../../utils/createElement');
 const {AxisBase} = require('../AxisBase');
-const {monthDay} = require('../../utils/dateFormatter');
+const {monthDate} = require('../../utils/dateFormatter');
 
 require('./axis-x.css');
 
@@ -66,13 +66,13 @@ module.exports.AxisX = class AxisX extends AxisBase {
     }
 
     _getAxisXG() {
-        return createSvgElement('g', 'x-axis', {
+        return createSVGElement('g', 'x-axis', {
             'transform': `translate(${this.opts.x},${this.opts.y})`
         });
     }
 
     _getAxisTickText(tick) {
-        const text = createSvgElement('text', 'x-axis-tick-text', {
+        const text = createSVGElement('text', 'x-axis-tick-text', {
             'y': this.opts.textOffset,
             'text-anchor': 'middle'
         });
@@ -82,7 +82,7 @@ module.exports.AxisX = class AxisX extends AxisBase {
     }
 
     _getAxisTickTitle(tick) {
-        return monthDay((this.opts.startDay + tick) * DAY);
+        return monthDate((this.opts.startDay + tick) * DAY);
     }
 
     _getTickTransform(tick, intervalStart, intervalEnd) {

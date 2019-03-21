@@ -1,4 +1,4 @@
-const {createSvgElement} = require('../utils/createElement');
+const {createSVGElement} = require('../utils/createElement');
 
 const DEFAULTS = {
     width: 600,
@@ -16,22 +16,22 @@ module.exports.Chart = class Chart {
     constructor(opts) {
         this.opts = Object.assign({}, DEFAULTS, opts);
 
-        this.chartSvg = createSvgElement('svg', 'chart', {
+        this.chartSvg = createSVGElement('svg', 'chart', {
             'width': this.opts.width,
             'height': this.opts.height + this.opts.xAxisHeight + this.opts.padding * 2
         });
 
-        this.chartContainerG = createSvgElement('g', 'chart-container', {
+        this.chartContainerG = createSVGElement('g', 'chart-container', {
             'transform': `translate(0,${this.opts.padding})`
         });
 
-        this.bgG = createSvgElement('g', 'bg');
-        this.baseDimensionG = createSvgElement('g', 'base-dimension');
-        this.beforeBgG = createSvgElement('g', 'before-bg');
-        this.afterBgG = createSvgElement('g', 'after-bg');
+        this.bgG = createSVGElement('g', 'bg');
+        this.baseDimensionG = createSVGElement('g', 'base-dimension');
+        this.beforeBgG = createSVGElement('g', 'before-bg');
+        this.afterBgG = createSVGElement('g', 'after-bg');
 
-        this.verticalTransfromG = createSvgElement('g', 'vertical-transform animate-t');
-        this.horizontalTransformG = createSvgElement('g', 'horizontal-transform');
+        this.verticalTransfromG = createSVGElement('g', 'vertical-transform animate-t');
+        this.horizontalTransformG = createSVGElement('g', 'horizontal-transform');
 
         this.rerender();
         this._combine();

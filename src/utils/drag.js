@@ -24,7 +24,7 @@ module.exports.drag = function drag(el, cbChange = noop, cbPause = noop, cbEnd =
             cbPause(e.pageX - xPause, e.pageY - yPause);
             xPause = e.pageX;
             yPause = e.pageY;
-        }, 100);
+        }, 15);
 
         let onmouseup = (e) => {
             e.preventDefault();

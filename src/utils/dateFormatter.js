@@ -1,19 +1,34 @@
-const MONTHS = {
-    0: 'Jan',
-    1: 'Feb',
-    2: 'Mar',
-    3: 'Apr',
-    4: 'May',
-    5: 'Jun',
-    6: 'Jul',
-    7: 'Aug',
-    8: 'Sep',
-    9: 'Oct',
-    10: 'Nov',
-    11: 'Dec'
+const DAYS_SHORT = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun'
+];
+
+const MONTHS_SHORT = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+];
+
+module.exports.monthDate = function monthDate(ts) {
+    const date = new Date(ts);
+    return `${MONTHS_SHORT[date.getMonth()]} ${date.getDate()}`;
 };
 
-module.exports.monthDay = function monthShortDay(ts) {
+module.exports.DayMonthDate = function monthDate(ts) {
     const date = new Date(ts);
-    return `${MONTHS[date.getMonth()]} ${date.getDate()}`;
+    return `${DAYS_SHORT[date.getDay()]}, ${MONTHS_SHORT[date.getMonth()]} ${date.getDate()}`;
 };
