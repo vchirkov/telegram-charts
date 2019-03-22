@@ -10,7 +10,8 @@ DEFAULTS = {
     height: 0,
     intervalMaxY: 0,
     r: 5,
-    strokeWidth: 2
+    strokeWidth: 2,
+    boundContainer: null
 };
 
 module.exports.Tooltip = class Tooltip {
@@ -70,6 +71,19 @@ module.exports.Tooltip = class Tooltip {
             this.yCircles[id].style.transform = `translate(0, ${translateY}px)`;
             this.yDivs[id].__setVal(y[this.opts.index]);
         });
+
+        if (this.opts.boundContainer) {
+            this.tooltipDataContainerDiv.style.transform = '';
+
+            const {left, right} = this.tooltipDataContainerDiv.getBoundingClientRect();
+            const boundRect = this.opts.boundContainer.getBoundingClientRect();
+
+            if (left < boundRect.left) {
+                this.tooltipDataContainerDiv.style.transform = `translate(${boundRect.left - left}px,0)`;
+            } else if (right > boundRect.right) {
+                this.tooltipDataContainerDiv.style.transform = `translate(${boundRect.right - right}px,0)`;
+            }
+        }
     }
 
     _combine() {

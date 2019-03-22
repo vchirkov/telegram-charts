@@ -16,9 +16,18 @@ const DAY = 24 * 60 * 60 * 1000;
 const DEFAULTS = {
     width: 600,
     chartHeight: 400,
-    navHeight: 80,
-    navPadding: 2,
     xAxisHeight: 30,
+    xAxisTextOffset: 20,
+    yAxisTicksTop: 0.9,
+    yAxisTextOffset: 6,
+    chartPadding: 2,
+    navHeight: 80,
+    navControlWidth: 8,
+    navControlBorderWidth: 2,
+    navOverflowOpacity: 0.04,
+    navControlsOpacity: 0.12,
+    navColor: '#30A3F0',
+    navPadding: 2,
     strokeWidth: 2,
     ticksX: 5,
     ticksY: 5,
@@ -178,7 +187,9 @@ class FollowersChart {
             width: this.opts.width,
             height: this.opts.chartHeight,
             max: this.maxY,
-            intervalEnd: this.intervalMaxY / this.maxY
+            intervalEnd: this.intervalMaxY / this.maxY,
+            ticksTop: this.opts.yAxisTicksTop,
+            textOffset: this.opts.yAxisTextOffset,
         });
     }
 
@@ -190,6 +201,8 @@ class FollowersChart {
             max: this.xDaysMax,
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd,
+            ticksNumber: this.opts.ticksX,
+            textOffset: this.opts.xAxisTextOffset,
             startDay: this.startDay
         });
     }
@@ -210,7 +223,8 @@ class FollowersChart {
             columns: this.y,
             x: this.x,
             height: this.opts.chartHeight,
-            intervalMaxY: this.intervalMaxY
+            intervalMaxY: this.intervalMaxY,
+            boundContainer: this.chart.getRoot()
         });
     }
 
@@ -222,6 +236,11 @@ class FollowersChart {
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd,
             minInterval: this.opts.minInterval,
+            controlWidth: this.opts.navControlWidth,
+            controlBorderWidth: this.opts.navControlBorderWidth,
+            overflowOpacity: this.opts.navOverflowOpacity,
+            controlsOpacity: this.opts.navControlsOpacity,
+            color: this.opts.navColor,
             maxY: this.maxY,
             maxX: this.xDays[this.xDays.length - 1]
         });
@@ -240,6 +259,7 @@ class FollowersChart {
                 case 'line':
                     return this._getChartPath({id, y, name, color});
                 default:
+                    console.warn(`chart with type: ${type} is not supported, fallback to 'line' chart`);
                     return this._getChartPath({id, y, name, color});
             }
         });

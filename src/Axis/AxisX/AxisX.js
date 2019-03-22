@@ -5,7 +5,6 @@ const {monthDate} = require('../../utils/dateFormatter');
 require('./axis-x.css');
 
 const DAY = 24 * 60 * 60 * 1000;
-const ADDITIONAL_ELS = 1;
 const DEFAULTS = {
     x: 0,
     y: 0,
@@ -17,7 +16,8 @@ const DEFAULTS = {
     ticksNumber: 5,
     textOffset: 20,
     className: 'animate-o',
-    startDay: 0
+    startDay: 0,
+    padding: 15
 };
 
 module.exports.AxisX = class AxisX extends AxisBase {
@@ -28,6 +28,9 @@ module.exports.AxisX = class AxisX extends AxisBase {
             (tick, intervalStart, intervalEnd) => this._getTickTransform(tick, intervalStart, intervalEnd));
         this.opts = Object.assign({}, DEFAULTS, opts);
         this.axisXG = this._getAxisXG();
+
+        this.minTicksNumber = Math.ceil(this.opts.ticksNumber / 1.75);
+        this.maxTicksNumber = Math.floor(this.opts.ticksNumber * 1.75);
 
         this.on(AxisBase.ON_NEW_TICK_GENERATED, ([textG]) => this.axisXG.appendChild(textG));
     }
@@ -56,18 +59,81 @@ module.exports.AxisX = class AxisX extends AxisBase {
         return this.axisXG;
     }
 
-    _getTicksRange(intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd) {
-        const interval = (intervalEnd - intervalStart) * this.opts.max;
-        const step = interval / this.opts.ticksNumber | 0;
-        const start = (((this.opts.max * intervalStart / step) | 0) - ADDITIONAL_ELS) * step;
-        return Array.from(Array(this.opts.ticksNumber + 1 + 2 * ADDITIONAL_ELS), (x, index) => {
-            return (start + index * step) | 0;
-        });
+    getStep(intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd) {
+        return this.step || this.setStep((intervalEnd - intervalStart) * this.opts.max / this.opts.ticksNumber | 0);
     }
 
+    setStep(step) {
+        return this.step = step;
+    }
+
+    _getTicksRange(intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd) {
+        if (intervalStart === this.opts.intervalStart && intervalEnd !== this.opts.intervalEnd) {
+            return this._getTickRangeStart(intervalStart, intervalEnd);
+        } else if (intervalStart !== this.opts.intervalStart && intervalEnd === this.opts.intervalEnd) {
+            return this._getTickRangeEnd(intervalStart, intervalEnd);
+        } else {
+            return this._getTickRangeSlide(intervalStart, intervalEnd);
+        }
+    }
+
+    _getTickRangeStart(intervalStart, intervalEnd) {
+        const interval = (intervalEnd - intervalStart) * this.opts.max;
+        let number = interval / this.getStep() | 0;
+        if (number > this.maxTicksNumber - 2) {
+            this.setStep(this.getStep() * 2);
+            number = this.opts.ticksNumber;
+        }
+        if (number < this.minTicksNumber) {
+            this.setStep(this.getStep() / 2);
+            number = this.opts.ticksNumber;
+        }
+
+        let ticks = Array.from(Array(number + 2), (x, index) => (this.start + index * this.getStep()) | 0);
+
+        this.end = ticks[ticks.length - 1];
+
+        return ticks;
+    }
+
+    _getTickRangeEnd(intervalStart, intervalEnd) {
+        const interval = (intervalEnd - intervalStart) * this.opts.max;
+        let number = interval / this.getStep() | 0;
+        if (number > this.maxTicksNumber - 2) {
+            this.setStep(this.getStep() * 2);
+            number = this.opts.ticksNumber;
+        }
+        if (number < this.minTicksNumber) {
+            this.setStep(this.getStep() / 2);
+            number = this.opts.ticksNumber;
+        }
+
+        let ticks = Array.from(Array(number + 2), (x, index) => (this.end - (number - index + 1) * this.getStep()) | 0);
+
+        this.start = ticks[0];
+
+        return ticks;
+    }
+
+    _getTickRangeSlide(intervalStart, intervalEnd) {
+        const step = this.getStep(intervalStart, intervalEnd);
+        const start = (((this.opts.max * intervalStart / step) | 0)) * step + (this.start || 0) % step;
+        const interval = (intervalEnd - intervalStart) * this.opts.max;
+        let number = interval / this.getStep() | 0;
+
+        let ticks = Array.from(Array(number + 2), (x, index) => (start + index * step) | 0);
+
+        this.start = ticks[0];
+        this.end = ticks[ticks.length - 1];
+
+        return ticks;
+    }
+
+
     _getAxisXG() {
+        const scaleX = 1 - this.opts.padding * 2 / this.opts.width;
         return createSVGElement('g', 'x-axis', {
-            'transform': `translate(${this.opts.x},${this.opts.y})`
+            'transform': `translate(${this.opts.x + this.opts.padding},${this.opts.y}) scale(${scaleX},1)`
         });
     }
 

@@ -9,7 +9,6 @@ const DEFAULTS = {
     max: 0,
     ticksNumber: 5,
     ticksTop: 0.9,
-    ticksBottom: 0,
     textOffset: 6
 };
 

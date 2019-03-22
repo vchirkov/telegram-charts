@@ -75,13 +75,12 @@ module.exports.TooltipRenderer = class TooltipRenderer extends AxisBase {
         });
 
         trigger.addEventListener('mouseenter', ({target}) => {
-            this.tooltip.update({index: tick});
-
             const {top, left} = this._getTriggerOffset(target);
 
             this.tooltipCarrierDiv.style.display = 'block';
             this.tooltipCarrierDiv.style.top = top + 'px';
             this.tooltipCarrierDiv.style.left = left + 'px';
+            this.tooltip.update({index: tick});
         });
 
         return trigger;
