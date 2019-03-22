@@ -5,12 +5,14 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require('path');
 
 module.exports = {
-    devtool: 'source-map',
-    entry: [path.resolve(__dirname, 'src/index.js')],
+    entry: {
+        lib: path.resolve(__dirname, 'src/lib/index.js'),
+        app: path.resolve(__dirname, 'src/app/index.js')
+    },
     target: 'web',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js'
+        filename: '[name].js'
     },
     devServer: {
         contentBase: path.join(__dirname, 'assets'),
@@ -19,6 +21,13 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /lib\/index\.js/,
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'FollowersChart'
+                }]
+            },
             {
                 test: /\.css$/,
                 use: [
@@ -37,15 +46,14 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             path: path.resolve(__dirname, 'dist'),
-            template: path.resolve(__dirname, './src/index.html'),
+            favicon: path.resolve(__dirname, 'src/app/assets/favicon.png'),
             title: 'Telegram Charts',
             filename: 'index.html',
-            favicon: 'assets/favicon.svg',
             inject: 'body',
             minify: true
         }),
         new MiniCssExtractPlugin({
-            filename: 'index.css'
+            filename: '[name].css'
         }),
         new OptimizeCSSAssetsPlugin({})
     ]

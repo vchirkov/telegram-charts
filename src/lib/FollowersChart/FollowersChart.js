@@ -12,6 +12,7 @@ const {Tooltip} = require('../Axis/Tooltip/Tooltip/Tooltip');
 require('./followers-chart.css');
 
 const DAY = 24 * 60 * 60 * 1000;
+const MIN_INTERVAL = 0.01;
 
 const DEFAULTS = {
     width: 600,
@@ -20,20 +21,19 @@ const DEFAULTS = {
     xAxisTextOffset: 20,
     yAxisTicksTop: 0.9,
     yAxisTextOffset: 6,
-    chartPadding: 2,
     navHeight: 80,
     navControlWidth: 8,
     navControlBorderWidth: 2,
     navOverflowOpacity: 0.04,
     navControlsOpacity: 0.12,
     navColor: '#30A3F0',
-    navPadding: 2,
     strokeWidth: 2,
     ticksX: 5,
     ticksY: 5,
     intervalStart: 0.75,
     intervalEnd: 1,
-    minInterval: 0.15
+    minInterval: 0.15,
+    nightMode: false
 };
 
 /**
@@ -54,6 +54,7 @@ class FollowersChart {
     //assumption: width and height are fixed and passed explicitly
     constructor(data, opts = {}) {
         this.opts = Object.assign({}, DEFAULTS, opts);
+        this.opts.minInterval = Math.max(this.opts.minInterval, MIN_INTERVAL);
 
         const {x, y} = this._parseData(data);
 
@@ -81,6 +82,7 @@ class FollowersChart {
 
         this._combine();
         this._listenToChangeEvents();
+        this._setDisplayMode();
 
         this.init();
     }
@@ -93,6 +95,15 @@ class FollowersChart {
 
     getRoot() {
         return this.containerDiv;
+    }
+
+    update({nightMode}) {
+        this.nightMode = nightMode;
+        this._setDisplayMode();
+    }
+
+    _setDisplayMode() {
+        this.containerDiv.setAttribute('night', this.nightMode);
     }
 
     _parseData({columns, names, types, colors}) {
@@ -187,6 +198,7 @@ class FollowersChart {
             width: this.opts.width,
             height: this.opts.chartHeight,
             max: this.maxY,
+            ticksNumber: this.opts.ticksY,
             intervalEnd: this.intervalMaxY / this.maxY,
             ticksTop: this.opts.yAxisTicksTop,
             textOffset: this.opts.yAxisTextOffset,
