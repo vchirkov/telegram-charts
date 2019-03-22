@@ -5,4 +5,5 @@
 .y-axis-tick-text {
     fill: #96A2AA;
     font-size: 10px;
+    text-shadow: 0 0 2px #fff;
 }

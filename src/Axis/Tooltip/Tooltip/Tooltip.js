@@ -79,9 +79,9 @@ module.exports.Tooltip = class Tooltip {
             const boundRect = this.opts.boundContainer.getBoundingClientRect();
 
             if (left < boundRect.left) {
-                this.tooltipDataContainerDiv.style.transform = `translate(${boundRect.left - left}px,0)`;
+                this.tooltipDataContainerDiv.style.transform = `translate(${(boundRect.left - left) | 0}px,0)`;
             } else if (right > boundRect.right) {
-                this.tooltipDataContainerDiv.style.transform = `translate(${boundRect.right - right}px,0)`;
+                this.tooltipDataContainerDiv.style.transform = `translate(${(boundRect.right - right) | 0}px,0)`;
             }
         }
     }

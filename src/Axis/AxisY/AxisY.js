@@ -1,5 +1,6 @@
 const {createSVGElement} = require('../../utils/createElement');
 const {AxisBase} = require('../AxisBase');
+const {largeNumber} = require('../../utils/numberFormatter');
 
 require('./axis-y.css');
 
@@ -50,7 +51,7 @@ module.exports.AxisY = class AxisY extends AxisBase {
             'y': -this.opts.textOffset
         });
 
-        text.appendChild(document.createTextNode(tick));
+        text.appendChild(document.createTextNode(largeNumber(tick)));
         return text;
     }
 
