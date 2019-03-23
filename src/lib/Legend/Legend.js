@@ -2,9 +2,11 @@ const {createHTMLElement} = require('../utils/createElement');
 const {SimpleEventEmitter} = require('../utils/SimpleEventEmitter');
 
 require('./legend.css');
+require('./legend_night.css');
 
 const DEFAULTS = {
-    columns: []
+    columns: [],
+    nightMode: false
 };
 
 
@@ -39,9 +41,19 @@ class Legend extends SimpleEventEmitter {
         return this.legendDiv;
     }
 
-    update(col) {
-        this.opts.columns.find(({id}) => id === col.id).visible = !!col.visible;
-        this.legendItemDivsMap[col.id].setAttribute('selected', !!col.visible);
+    update({col, nightMode}) {
+        if (typeof nightMode === "boolean") {
+            this.opts.nightMode = nightMode;
+            this._setDisplayMode();
+        }
+        if (col) {
+            this.opts.columns.find(({id}) => id === col.id).visible = !!col.visible;
+            this.legendItemDivsMap[col.id].setAttribute('selected', !!col.visible);
+        }
+    }
+
+    _setDisplayMode() {
+        this.legendDiv.setAttribute('night', this.opts.nightMode);
     }
 
     _combine() {

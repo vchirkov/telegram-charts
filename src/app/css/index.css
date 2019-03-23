@@ -6,12 +6,28 @@ h1 {
     font-weight: 500;
 }
 
+.readme-toolbar {
+    justify-content: flex-end;
+    background-color: #1a1a1a;
+}
+
+.react-dat-gui {
+    z-index: 1;
+}
+
+button.night-mode-control {
+    padding: 0;
+}
+
 .container {
     width: 100%;
-    padding: 55px 15px 0;
     margin-right: auto;
     margin-left: auto;
     box-sizing: border-box;
+}
+
+.chart-list {
+    padding: 55px 0 0;
 }
 
 @media (min-width: 576px) {
@@ -36,13 +52,4 @@ h1 {
     .container {
         max-width: 1140px;
     }
-}
-
-.readme-toolbar {
-    justify-content: flex-end;
-    background-color: #1a1a1a;
-}
-
-.react-dat-gui {
-    z-index: 1;
 }

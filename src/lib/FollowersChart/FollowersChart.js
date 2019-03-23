@@ -10,6 +10,7 @@ const {TooltipRenderer} = require('../Axis/Tooltip/TooltipRenderer/TooltipRender
 const {Tooltip} = require('../Axis/Tooltip/Tooltip/Tooltip');
 
 require('./followers-chart.css');
+require('./followers-chart_night.css');
 
 const DAY = 24 * 60 * 60 * 1000;
 const MIN_INTERVAL = 0.01;
@@ -22,11 +23,12 @@ const DEFAULTS = {
     yAxisTicksTop: 0.9,
     yAxisTextOffset: 6,
     navHeight: 80,
-    navControlWidth: 8,
+    navControlWidth: 12,
     navControlBorderWidth: 2,
     navOverflowOpacity: 0.04,
     navControlsOpacity: 0.12,
     navColor: '#30A3F0',
+    navColorNight: '#fff',
     strokeWidth: 2,
     ticksX: 5,
     ticksY: 5,
@@ -100,12 +102,21 @@ class FollowersChart {
     }
 
     update({nightMode}) {
-        this.nightMode = nightMode;
-        this._setDisplayMode();
+        if (typeof nightMode === "boolean") {
+            this.opts.nightMode = nightMode;
+
+            this.axisY.update({nightMode});
+            this.axisX.update({nightMode});
+            this.tooltip.update({nightMode});
+            this.legend.update({nightMode});
+            this.nav.update({nightMode});
+
+            this._setDisplayMode();
+        }
     }
 
     _setDisplayMode() {
-        this.containerDiv.setAttribute('night', this.nightMode);
+        this.containerDiv.setAttribute('night', this.opts.nightMode);
     }
 
     _parseData({columns, names, types, colors}) {
@@ -155,7 +166,7 @@ class FollowersChart {
 
             this.intervalMaxY = intervalMaxY;
 
-            this.legend.update(column);
+            this.legend.update({col: column});
             this.axisY.update({intervalEnd: intervalMaxY / this.maxY});
             this.chart.update({scaleFactor: intervalMaxY / this.maxY});
             this.nav.update({scaleFactor: visibleMaxY / this.maxY});
@@ -255,6 +266,7 @@ class FollowersChart {
             overflowOpacity: this.opts.navOverflowOpacity,
             controlsOpacity: this.opts.navControlsOpacity,
             color: this.opts.navColor,
+            colorNight: this.opts.navColorNight,
             maxY: this.maxY,
             maxX: this.xDays[this.xDays.length - 1]
         });

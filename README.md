@@ -4,10 +4,10 @@ Telegram Followers chart for Telegram Developer Contest
 
 ## Getting Started
 
-Library has absolutely no external dependencies and consists of two files:
+Library has no external or included dependencies and consists of two files:
 
-`./lib.js` - **7.41 kB** gzip  
-`./lib.css` - **945 B** gzip
+`./lib.js` - **8.11 kB** gzip  
+`./lib.css` - **1.08 kB** gzip
 
 Demo build exposes `FollowersChart` as global variable, although can be rebuild for UMD/CommonJS/ES6 imports/etc. as being assembled by Webpack.
 
@@ -84,6 +84,9 @@ Opacity of `Navigation` extend, shrink slide area.
 
 * **navColor** (`default:'#30A3F0'`, `supports: valid css colors`)  
 Color of `Navigation` panel.
+
+* **navColor** (`default:'#fff'`, `supports: valid css colors`)  
+Color of `Navigation` panel when in night mode.
 
 * **strokeWidth** (`default:2`, `min:0`)  
 Stroke Width of `Chart` and `Navigation` lines, set in pixels.

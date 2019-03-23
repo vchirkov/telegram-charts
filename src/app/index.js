@@ -1,4 +1,5 @@
-import './index.css';
+import './css/index.css';
+import './css/index_night.css';
 import './util/greet';
 
 import React from 'react';

@@ -19,9 +19,11 @@ const DEFAULTS = {
     overflowOpacity: 0.04,
     controlsOpacity: 0.12,
     color: '#30A3F0',
+    colorNight: '#fff',
     maxY: 0,
     maxX: 0,
     padding: 2,
+    nightMode: false
 };
 
 /**
@@ -65,6 +67,7 @@ class Navigation extends SimpleEventEmitter {
         this.bgContainerG = this._getBgContainerG();
         this.scaleContainerG = this._getScaleContainerG();
         this.bgG = this._getBgG();
+        this.maskCarrierRect = this._getMaskCarrierRect();
         this.navControlsG = this._getNavControlsG();
         this.navMask = this._getMask();
         this.navRect = this._getNavRect();
@@ -81,9 +84,18 @@ class Navigation extends SimpleEventEmitter {
         return this.navSvg;
     }
 
-    update({scaleFactor}) {
-        this.opts.scaleFactor = scaleFactor;
-        this.rerenderTransform();
+    update({scaleFactor, nightMode}) {
+        if (typeof nightMode === "boolean") {
+            this.opts.nightMode = nightMode;
+
+            this.rerenderNavigationColor();
+            this._setDisplayMode();
+        }
+
+        if (scaleFactor) {
+            this.opts.scaleFactor = scaleFactor;
+            this.rerenderTransform();
+        }
     }
 
     addToBackground(el) {
@@ -97,6 +109,12 @@ class Navigation extends SimpleEventEmitter {
         this.rerenderTransform();
         this.rerenderNavigation();
         this.rerenderBaseDimensions();
+    }
+
+    rerenderNavigationColor() {
+        this.maskCarrierRect.setAttribute('fill', this._getColor());
+        this.startControlRect.setAttribute('fill', this._getColor());
+        this.endControlRect.setAttribute('fill', this._getColor());
     }
 
     rerenderNavigation() {
@@ -142,6 +160,7 @@ class Navigation extends SimpleEventEmitter {
     _combine() {
         this.navMask.appendChild(this.navMaskRectG);
 
+        this.navControlsG.appendChild(this.maskCarrierRect);
         this.navControlsG.appendChild(this.navRect);
         this.navControlsG.appendChild(this.startControlRect);
         this.navControlsG.appendChild(this.endControlRect);
@@ -226,21 +245,19 @@ class Navigation extends SimpleEventEmitter {
     }
 
     _getNavControlsG() {
-        const g = createSVGElement('g', 'nav-controls-container');
+        return createSVGElement('g', 'nav-controls-container');
+    }
 
-        const rect = createSVGElement('rect', 'mask-carrier', {
+    _getMaskCarrierRect() {
+        return createSVGElement('rect', 'mask-carrier', {
             'x': 0,
             'y': 0,
-            'fill': this.opts.color,
+            'fill': this._getColor(),
             'fill-opacity': this.opts.controlsOpacity,
             'width': this.opts.width,
             'height': this.opts.height,
             'mask': `url(#${this.maskId})`
         });
-
-        g.appendChild(rect);
-
-        return g;
     }
 
     _getNavControl(typeClassName = '') {
@@ -249,7 +266,7 @@ class Navigation extends SimpleEventEmitter {
             'y': this.opts.controlBorderWidth,
             'height': this.opts.height - 2 * this.opts.controlBorderWidth,
             'width': this.opts.controlWidth,
-            'fill': this.opts.color,
+            'fill': this._getColor(),
             'fill-opacity': this.opts.controlsOpacity,
             'stroke-width': this.opts.controlBorderWidth * 2,
             'stroke-opacity': 0,
@@ -333,6 +350,14 @@ class Navigation extends SimpleEventEmitter {
             intervalStart: this.opts.intervalStart,
             intervalEnd: this.opts.intervalEnd
         });
+    }
+
+    _getColor() {
+        return this.opts.nightMode ? this.opts.colorNight : this.opts.color;
+    }
+
+    _setDisplayMode() {
+        this.navSvg.setAttribute('night', this.opts.nightMode);
     }
 }
 

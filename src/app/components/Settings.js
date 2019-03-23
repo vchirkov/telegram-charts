@@ -44,6 +44,7 @@ export class Settings extends Component {
                     <DatNumber path='navOverflowOpacity' min={0} max={1} step={0.01}/>
                     <DatNumber path='navControlsOpacity' min={0} max={1} step={0.01}/>
                     <DatColor path='navColor'/>
+                    <DatColor path='navColorNight'/>
                     <DatNumber path='strokeWidth' min={0} step={1}/>
                     <DatNumber path='minInterval' min={0} max={1} step={0.01}/>
 

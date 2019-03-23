@@ -3,6 +3,7 @@ const {AxisBase} = require('../AxisBase');
 const {largeNumber} = require('../../utils/numberFormatter');
 
 require('./axis-y.css');
+require('./axis-y_night.css');
 
 const DEFAULTS = {
     height: 0,
@@ -10,7 +11,8 @@ const DEFAULTS = {
     max: 0,
     ticksNumber: 5,
     ticksTop: 0.9,
-    textOffset: 6
+    textOffset: 6,
+    nightMode: false
 };
 
 module.exports.AxisY = class AxisY extends AxisBase {
@@ -30,6 +32,20 @@ module.exports.AxisY = class AxisY extends AxisBase {
             this.linesG.appendChild(lineG);
             this.titlesG.appendChild(textG);
         });
+    }
+
+    update(opts) {
+        if (typeof opts.nightMode === "boolean") {
+            this.opts.nightMode = opts.nightMode;
+            this._setDisplayMode();
+        }
+
+        super.update(opts);
+    }
+
+    _setDisplayMode() {
+        this.linesG.setAttribute('night', this.opts.nightMode);
+        this.titlesG.setAttribute('night', this.opts.nightMode);
     }
 
     getLinesRoot() {

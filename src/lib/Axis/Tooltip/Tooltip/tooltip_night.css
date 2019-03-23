@@ -1,0 +1,15 @@
+.tooltip[night="true"] .tooltip-data-container {
+    background-color: #242F3E;
+}
+
+.tooltip[night="true"] .y-line {
+    stroke: #546778;
+}
+
+.tooltip[night="true"] .tooltip-text {
+    color: #fff;
+}
+
+.tooltip[night="true"] .y-circle {
+    fill: #242F3E;
+}

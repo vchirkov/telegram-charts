@@ -47,3 +47,7 @@
 .tooltip .y-line {
     stroke: #DAE1E6;
 }
+
+.tooltip .y-circle {
+    fill: #fff;
+}

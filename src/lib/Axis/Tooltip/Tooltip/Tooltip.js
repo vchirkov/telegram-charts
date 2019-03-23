@@ -2,6 +2,7 @@ const {createHTMLElement, createSVGElement} = require('../../../utils/createElem
 const {DayMonthDate} = require('../../../utils/dateFormatter');
 
 require('./tooltip.css');
+require('./tooltip_night.css');
 
 DEFAULTS = {
     columns: [],
@@ -11,7 +12,8 @@ DEFAULTS = {
     intervalMaxY: 0,
     r: 5,
     strokeWidth: 2,
-    boundContainer: null
+    boundContainer: null,
+    nightMode: false
 };
 
 module.exports.Tooltip = class Tooltip {
@@ -44,7 +46,12 @@ module.exports.Tooltip = class Tooltip {
         return this.tooltipDiv;
     }
 
-    update({index, intervalMaxY}) {
+    update({index, intervalMaxY, nightMode}) {
+        if (typeof nightMode === "boolean") {
+            this.opts.nightMode = nightMode;
+            this._setDisplayMode();
+        }
+
         if (intervalMaxY) {
             this.opts.intervalMaxY = intervalMaxY;
         }
@@ -98,6 +105,10 @@ module.exports.Tooltip = class Tooltip {
         this.tooltipDiv.appendChild(this.tooltipDataContainerDiv);
     }
 
+    _setDisplayMode() {
+        this.tooltipDiv.setAttribute('night', this.opts.nightMode);
+    }
+
     _getYDivs() {
         return this.opts.columns.reduce((yDivs, col) => {
             const yDataContainerDiv = createHTMLElement('div', 'y-data-container', {}, {
@@ -124,7 +135,6 @@ module.exports.Tooltip = class Tooltip {
             yCircles[col.id] = createSVGElement('circle', 'y-circle', {
                 'stroke': col.color,
                 'stroke-width': 2,
-                'fill': '#fff',
                 'r': this.opts.r,
                 'cx': pos,
                 'cy': pos

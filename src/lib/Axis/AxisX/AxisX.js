@@ -3,6 +3,7 @@ const {AxisBase} = require('../AxisBase');
 const {monthDate} = require('../../utils/dateFormatter');
 
 require('./axis-x.css');
+require('./axis-x_night.css');
 
 const DAY = 24 * 60 * 60 * 1000;
 const DEFAULTS = {
@@ -17,7 +18,8 @@ const DEFAULTS = {
     textOffset: 20,
     className: 'animate-o',
     startDay: 0,
-    padding: 15
+    padding: 15,
+    nightMode: false
 };
 
 module.exports.AxisX = class AxisX extends AxisBase {
@@ -38,8 +40,14 @@ module.exports.AxisX = class AxisX extends AxisBase {
     async update({
                      intervalStart = this.opts.intervalStart,
                      intervalEnd = this.opts.intervalEnd,
-                     animated = true
+                     animated = true,
+                     nightMode
                  }) {
+        if (typeof nightMode === "boolean") {
+            this.opts.nightMode = nightMode;
+            this._setDisplayMode();
+        }
+
         if (this.opts.intervalStart === intervalStart &&
             this.opts.intervalEnd === intervalEnd) {
             return;
@@ -53,6 +61,10 @@ module.exports.AxisX = class AxisX extends AxisBase {
         }
 
         return this.rerender(intervalStart, intervalEnd);
+    }
+
+    _setDisplayMode() {
+        this.axisXG.setAttribute('night', this.opts.nightMode);
     }
 
     getRoot() {

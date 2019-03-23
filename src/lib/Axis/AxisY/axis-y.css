@@ -1,8 +1,9 @@
-.y-axis-tick-line {
+.y-axis-lines-container .y-axis-tick-line {
     stroke: #F2F4F5;
+    opacity: 0.8;
 }
 
-.y-axis-tick-text {
+.y-axis-titles-container .y-axis-tick-text {
     fill: #96A2AA;
     font-size: 10px;
     text-shadow: 0 0 2px #fff;

@@ -1,0 +1,7 @@
+.legend[night="true"] .legend-item {
+    border: solid 1px #344658;
+}
+
+.legend[night="true"] .legend-item-name {
+    color: #fff;
+}
