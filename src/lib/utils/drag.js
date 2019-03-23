@@ -1,42 +1,73 @@
 const {debounce} = require('./debounce');
-const noop = () => {
+const noop = () => undefined;
+
+const MOUSE = {
+    start: 'mousedown',
+    move: 'mousemove',
+    end: ['mouseup']
 };
 
+const TOUCH = {
+    start: 'touchstart',
+    move: 'touchmove',
+    end: ['touchend', 'touchcancel']
+};
+
+function getCoordinates(e) {
+    if (e.touches && e.touches[0]) {
+        return {pageX, pageY} = e.touches[0];
+    } else {
+        return {pageX, pageY} = e;
+    }
+}
+
 module.exports.drag = function drag(el, cbChange = noop, cbPause = noop, cbEnd = noop) {
-    el.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        let x = e.pageX;
-        let y = e.pageY;
-        let xPause = e.pageX;
-        let yPause = e.pageY;
+    el.addEventListener(MOUSE.start, listen(MOUSE));
+    if ('ontouchstart' in document.documentElement) {
+        el.addEventListener(TOUCH.start, listen(TOUCH));
+    }
 
-        let onmousemove = (e) => {
+    function listen({move, end}) {
+        return function ondown(e) {
             e.preventDefault();
 
-            cbChange(e.pageX - x, e.pageY - y);
-            x = e.pageX;
-            y = e.pageY;
-        };
+            const {pageX, pageY} = getCoordinates(e);
+            let x = pageX;
+            let y = pageY;
+            let xPause = pageX;
+            let yPause = pageY;
 
-        let onmousemovePause = debounce((e) => {
-            e.preventDefault();
+            let onmove = (e) => {
+                e.preventDefault();
 
-            cbPause(e.pageX - xPause, e.pageY - yPause);
-            xPause = e.pageX;
-            yPause = e.pageY;
-        }, 15);
+                const {pageX, pageY} = getCoordinates(e);
+                cbChange(pageX - x, pageY - y);
+                x = pageX;
+                y = pageY;
+            };
 
-        let onmouseup = (e) => {
-            e.preventDefault();
-            document.removeEventListener('mousemove', onmousemove);
-            document.removeEventListener('mousemove', onmousemovePause);
-            document.removeEventListener('mouseup', onmouseup);
+            let onmovePause = debounce((e) => {
+                e.preventDefault();
 
-            cbEnd();
-        };
+                const {pageX, pageY} = getCoordinates(e);
+                cbPause(pageX - xPause, pageY - yPause);
+                xPause = pageX;
+                yPause = pageY;
+            }, 15);
 
-        document.addEventListener('mousemove', onmousemove);
-        document.addEventListener('mousemove', onmousemovePause);
-        document.addEventListener('mouseup', onmouseup);
-    });
+            let onend = () => {
+                e.preventDefault();
+
+                document.removeEventListener(move, onmove);
+                document.removeEventListener(move, onmovePause);
+                end.forEach(e => document.removeEventListener(e, onend));
+
+                cbEnd();
+            };
+
+            document.addEventListener(move, onmove);
+            document.addEventListener(move, onmovePause);
+            end.forEach(e => document.addEventListener(e, onend));
+        }
+    }
 };

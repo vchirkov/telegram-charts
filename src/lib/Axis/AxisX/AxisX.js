@@ -131,7 +131,7 @@ module.exports.AxisX = class AxisX extends AxisBase {
 
 
     _getAxisXG() {
-        const scaleX = 1 - this.opts.padding * 2 / this.opts.width;
+        const scaleX = !this.opts.width ? this.opts.width : 1 - this.opts.padding * 2 / this.opts.width;
         return createSVGElement('g', 'x-axis', {
             'transform': `translate(${this.opts.x + this.opts.padding},${this.opts.y}) scale(${scaleX},1)`
         });

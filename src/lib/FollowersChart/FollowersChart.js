@@ -55,6 +55,8 @@ class FollowersChart {
     constructor(data, opts = {}) {
         this.opts = Object.assign({}, DEFAULTS, opts);
         this.opts.minInterval = Math.max(this.opts.minInterval, MIN_INTERVAL);
+        this.opts.intervalStart = Math.max(Math.min(this.opts.intervalStart, this.opts.intervalEnd - this.opts.minInterval), 0);
+        this.opts.intervalEnd = Math.max(Math.max(this.opts.intervalEnd, this.opts.intervalStart + this.opts.minInterval), 1);
 
         const {x, y} = this._parseData(data);
 
@@ -329,4 +331,5 @@ class FollowersChart {
     }
 }
 
+FollowersChart.DEFAULTS = DEFAULTS;
 module.exports.FollowersChart = FollowersChart;

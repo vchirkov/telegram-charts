@@ -3,6 +3,8 @@ const {createSVGElement} = require('../utils/createElement');
 const {drag} = require('../utils/drag');
 const {puid} = require('../utils/puid');
 
+require('./navigation.css');
+
 const MASK_ID = 'nav-mask';
 
 const DEFAULTS = {
@@ -161,7 +163,7 @@ class Navigation extends SimpleEventEmitter {
 
     _getBgContainerG() {
         const padding = this.opts.padding + this.opts.controlBorderWidth;
-        const scaleY = 1 - 2 * padding / this.opts.height;
+        const scaleY = this.opts.height ? 1 - 2 * padding / this.opts.height : this.opts.height;
         return createSVGElement('g', 'bg-container', {
             'transform': `scale(1,${scaleY}) translate(0, ${padding})`
         });

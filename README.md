@@ -46,13 +46,13 @@ Color for each line in 6-hex format (e.g. "#AAAAAA").
 Names for each line.
 
 ### Opts:
-* **width** (`default:600`)  
+* **width** (`default:600`, `min:0`)  
 Whole Followers Chart width, set in pixels
 
-* **chartHeight** (`default:400`)  
+* **chartHeight** (`default:400`, `min:0`)  
 Height of Chart block, set in pixels
 
-* **xAxisHeight** (`default:30`)  
+* **xAxisHeight** (`default:30`, `min:0`)  
 Height of `AxisX` block, set in pixels.
   > Bigger Value -> More Space between `Chart` and `Navigation`
 
@@ -65,15 +65,15 @@ Top Border for `AxisY` values rendered.
 
 * **yAxisTextOffset** (`default:6`)  
 Offset of `AxisY` text, set in pixels. 
-  > Bigger Value -> Text goes more to the right
+  > Bigger Value -> Higher Text
 
-* **navHeight** (`default:80`)  
+* **navHeight** (`default:80`, `min:0`)  
 Height of `Navigation` panel, set in pixels.
 
-* **navControlWidth** (`default:8`)  
+* **navControlWidth** (`default:8`, `min:0`)  
 Width of `Navigation` extend/shrink controls, set in pixels.
 
-* **navControlBorderWidth** (`default:2`)  
+* **navControlBorderWidth** (`default:2`, `min:0`)  
 Width of `Navigation` slide control border, set in pixels.
 
 * **navOverflowOpacity** (`default:0.04`, `min:0`, `max:1`)  
@@ -85,7 +85,7 @@ Opacity of `Navigation` extend, shrink slide area.
 * **navColor** (`default:'#30A3F0'`, `supports: valid css colors`)  
 Color of `Navigation` panel.
 
-* **strokeWidth** (`default:2`)  
+* **strokeWidth** (`default:2`, `min:0`)  
 Stroke Width of `Chart` and `Navigation` lines, set in pixels.
 
 * **ticksX** (`default:5`, `min:0`)  
@@ -112,7 +112,9 @@ Sets FollowersChart night mode state.
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png" alt="iOS Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>iOS Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/samsung-internet/samsung-internet_48x48.png" alt="Samsung" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Samsung |
 | --------- | --------- | --------- | --------- | --------- | --------- |
-| Edge| last 3 versions| last 3 versions| last 3 versions| last 3 versions| last 3 versions
+| Edge| last 3 versions| last 3 versions| supported | supported | last 3 versions
+
+Browser Support can be improved by adding several polyfills.
 
 ## Author
 
