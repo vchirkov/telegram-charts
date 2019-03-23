@@ -16,7 +16,7 @@ const MIN_INTERVAL = 0.01;
 
 const DEFAULTS = {
     width: 600,
-    chartHeight: 400,
+    chartHeight: 300,
     xAxisHeight: 30,
     xAxisTextOffset: 20,
     yAxisTicksTop: 0.9,

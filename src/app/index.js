@@ -6,10 +6,7 @@ import {render} from 'react-dom';
 
 import {App} from './components/App'
 
-const appEl = document.createElement('div');
-
-document.body.appendChild(appEl);
-appEl.className = 'container';
+const appEl = document.getElementById('app');
 
 render(<App width={appEl.clientWidth}/>, appEl);
 

@@ -48,7 +48,7 @@ export class Settings extends Component {
                     <DatNumber path='minInterval' min={0} max={1} step={0.01}/>
 
                     <DatButton label='Apply config'
-                               onClick={() => apply(this.state.opts)}/>
+                               onClick={() => this.apply()}/>
                 </DatGui>
             );
         } else {
@@ -61,6 +61,11 @@ export class Settings extends Component {
                 </DatGui>
             );
         }
+    }
+
+    apply() {
+        this.setState(Object.assign(this.state, {collapsed: true}));
+        this.props.apply(this.state.opts);
     }
 
     onClickReadme() {

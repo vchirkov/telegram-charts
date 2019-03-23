@@ -62,8 +62,8 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             path: path.resolve(__dirname, 'dist'),
+            template: path.resolve(__dirname, 'src/app/index.html'),
             favicon: path.resolve(__dirname, 'src/app/resources/favicon.png'),
-            title: 'Telegram Charts',
             filename: 'index.html',
             inject: 'body',
             minify: true
