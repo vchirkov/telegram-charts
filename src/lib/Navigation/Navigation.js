@@ -118,10 +118,10 @@ class Navigation extends SimpleEventEmitter {
     rerenderNavRect() {
         const scaleX = this.opts.intervalEnd - this.opts.intervalStart;
         const translateX = this.opts.intervalStart * this.opts.width;
-        const transform = `translate(${translateX}px,0) scale(${scaleX},1)`;
+        const transform = `translate(${translateX},0) scale(${scaleX},1)`;
 
-        this.navRect.style.transform = transform;
-        this.navMaskRectG.style.transform = transform;
+        this.navRect.setAttribute('transform', transform);
+        this.navMaskRectG.setAttribute('transform', transform);
     }
 
     rerenderNavControls() {
@@ -136,7 +136,7 @@ class Navigation extends SimpleEventEmitter {
         const scaleX = this.opts.width / this.opts.maxX;
         const scaleY = this.opts.height / this.opts.maxY;
 
-        this.bgG.style.transform = `scale(${scaleX},${scaleY})`;
+        this.bgG.setAttribute('transform', `scale(${scaleX},${scaleY})`);
     }
 
     _combine() {

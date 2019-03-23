@@ -9,7 +9,8 @@ const DEFAULTS = {
     max: 0,
     intervalStart: 0,
     intervalEnd: 1,
-    className: ''
+    className: '',
+    transformAsAttribute: true
 };
 
 module.exports.TooltipRenderer = class TooltipRenderer extends AxisBase {
@@ -89,7 +90,7 @@ module.exports.TooltipRenderer = class TooltipRenderer extends AxisBase {
     _getTickTransform(tick, intervalStart, intervalEnd) {
         const translateX = (tick / this.opts.max - intervalStart) / (intervalEnd - intervalStart) * this.opts.width;
         const scale = 1 / (this.opts.max * (intervalEnd - intervalStart)) * this.opts.width;
-        return `translate(${translateX - scale / 2}px,0) scale(${scale}, 1)`;
+        return `translate(${translateX - scale / 2},0) scale(${scale}, 1)`;
     }
 
     _getTriggerOffset(trigger) {

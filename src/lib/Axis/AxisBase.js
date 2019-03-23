@@ -8,7 +8,8 @@ const DEFAULTS = {
     ticksNumber: 5,
     ticksTop: 0.9,
     ticksBottom: 0,
-    className: 'animate-to'
+    className: 'animate-to',
+    transformAsAttribute: false
 };
 
 
@@ -70,7 +71,7 @@ class AxisBase extends SimpleEventEmitter {
     _animate(united, next, prev, animate = true) {
         Object.entries(united).forEach(([tick, generated]) => {
             const transform = this._transformFn(tick, next.intervalStart, next.intervalEnd);
-            generated.forEach(svgEl => svgEl.style.transform = transform);
+            generated.forEach(svgEl => this._setTransform(svgEl, transform));
             if (next.ticks[tick]) {
                 generated.forEach(svgEl => svgEl.style.opacity = 1);
             } else if (prev.ticks[tick]) {
@@ -114,13 +115,22 @@ class AxisBase extends SimpleEventEmitter {
 
     _getTickG(generatedChild, transform) {
         const g = createSVGElement('g', `tick-container ${this.opts.className}`, {}, {
-            transform,
             opacity: 0
         });
+
+        this._setTransform(g, transform);
 
         g.appendChild(generatedChild);
 
         return g;
+    }
+
+    _setTransform(el, transform) {
+        if (this.opts.transformAsAttribute) {
+            el.setAttribute('transform', transform);
+        } else {
+            el.style.transform = transform;
+        }
     }
 }
 

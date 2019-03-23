@@ -86,7 +86,7 @@ module.exports.Chart = class Chart {
         const scaleX = this.opts.width / this.opts.maxX;
         const scaleY = this.opts.height / this.opts.maxY;
 
-        this.baseDimensionG.style.transform = `scale(${scaleX},${scaleY})`;
+        this.baseDimensionG.setAttribute('transform', `scale(${scaleX},${scaleY})`);
     }
 
     rerenderTransfromY() {
