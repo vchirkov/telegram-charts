@@ -70,7 +70,7 @@ Offset of `AxisY` text, set in pixels.
 * **navHeight** (`default:80`, `min:0`)  
 Height of `Navigation` panel, set in pixels.
 
-* **navControlWidth** (`default:8`, `min:0`)  
+* **navControlWidth** (`default:12`, `min:0`)  
 Width of `Navigation` extend/shrink controls, set in pixels.
 
 * **navControlBorderWidth** (`default:2`, `min:0`)  

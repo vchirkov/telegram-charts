@@ -16,7 +16,8 @@ h1,
 .tooltip-text,
 .y-circle,
 .legend-item,
-.legend-item-name {
+.legend-item-name,
+.night-mode-control-icon {
     transition: background-color 0.5s,
     color 0.5s,
     fill 0.5s,
