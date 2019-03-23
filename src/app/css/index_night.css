@@ -5,3 +5,23 @@ body.night {
 body.night h1 {
     color: #fff;
 }
+
+body,
+h1,
+.x-axis,
+.y-axis-tick-line,
+.y-axis-tick-text,
+.tooltip-data-container,
+.y-line,
+.tooltip-text,
+.y-circle,
+.legend-item,
+.legend-item-name {
+    transition: background-color 0.5s,
+    color 0.5s,
+    fill 0.5s,
+    stroke 0.5s,
+    text-shadow 0.5s,
+    color 0.5s,
+    border-color 0.5s;
+}

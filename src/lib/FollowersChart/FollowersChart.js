@@ -10,7 +10,6 @@ const {TooltipRenderer} = require('../Axis/Tooltip/TooltipRenderer/TooltipRender
 const {Tooltip} = require('../Axis/Tooltip/Tooltip/Tooltip');
 
 require('./followers-chart.css');
-require('./followers-chart_night.css');
 
 const DAY = 24 * 60 * 60 * 1000;
 const MIN_INTERVAL = 0.01;

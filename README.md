@@ -6,7 +6,7 @@ Telegram Followers chart for Telegram Developer Contest
 
 Library has no external or included dependencies and consists of two files:
 
-`./lib.js` - **8.11 kB** gzip  
+`./lib.js` - **8.1 kB** gzip  
 `./lib.css` - **1.08 kB** gzip
 
 Demo build exposes `FollowersChart` as global variable, although can be rebuild for UMD/CommonJS/ES6 imports/etc. as being assembled by Webpack.
