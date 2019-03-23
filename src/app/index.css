@@ -1,0 +1,47 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Open Sans";
+}
+
+h1 {
+    font-weight: 500;
+}
+
+.container {
+    width: 100%;
+    padding: 55px 15px 0;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+.readme-toolbar {
+    justify-content: flex-end;
+    background-color: #1a1a1a;
+}
+
+.react-dat-gui {
+    z-index: 1;
+}

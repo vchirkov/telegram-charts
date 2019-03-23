@@ -1,7 +1,15 @@
-const data = require('./data');
+import './index.css';
+import './util/greet';
 
-data.forEach(chartData => {
-    const c = new window.FollowersChart(chartData);
-    document.body.appendChild(c.getRoot());
-});
+import React from 'react';
+import {render} from 'react-dom';
+
+import {App} from './components/App'
+
+const appEl = document.createElement('div');
+
+document.body.appendChild(appEl);
+appEl.className = 'container';
+
+render(<App width={appEl.clientWidth}/>, appEl);
 

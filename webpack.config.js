@@ -15,14 +15,26 @@ module.exports = {
         filename: '[name].js'
     },
     devServer: {
-        contentBase: path.join(__dirname, 'assets'),
         compress: true,
+        host: '0.0.0.0',
         port: 3000
     },
     module: {
         rules: [
             {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                include: [
+                    path.resolve(__dirname, "src/app")
+                ],
+                use: ['babel-loader']
+            },
+            {
                 test: /lib\/index\.js/,
+                exclude: [
+                    /node_modules/,
+                    path.resolve(__dirname, "src/app")
+                ],
                 use: [{
                     loader: 'expose-loader',
                     options: 'FollowersChart'
@@ -40,13 +52,17 @@ module.exports = {
                 use: {
                     loader: 'svg-url-loader'
                 }
+            },
+            {
+                test: /\.md/i,
+                use: 'raw-loader',
             }
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             path: path.resolve(__dirname, 'dist'),
-            favicon: path.resolve(__dirname, 'src/app/assets/favicon.png'),
+            favicon: path.resolve(__dirname, 'src/app/resources/favicon.png'),
             title: 'Telegram Charts',
             filename: 'index.html',
             inject: 'body',
