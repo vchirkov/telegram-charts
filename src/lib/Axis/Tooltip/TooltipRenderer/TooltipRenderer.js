@@ -32,6 +32,7 @@ module.exports.TooltipRenderer = class TooltipRenderer extends AxisBase {
     _listenToChangeEvents() {
         this.on(AxisBase.ON_NEW_TICK_GENERATED, ([textG]) => this.tooltipRendererG.appendChild(textG));
         this.tooltipRendererG.addEventListener('mouseleave', () => this.tooltipCarrierDiv.style.display = '');
+        this.tooltipRendererG.addEventListener('touchend', () => this.tooltipCarrierDiv.style.display = '');
     }
 
     async update({intervalStart = this.opts.intervalStart, intervalEnd = this.opts.intervalEnd}) {
@@ -75,14 +76,17 @@ module.exports.TooltipRenderer = class TooltipRenderer extends AxisBase {
             'fill-opacity': 0
         });
 
-        trigger.addEventListener('mouseenter', ({target}) => {
+        const onEnter = ({target}) => {
             const {top, left} = this._getTriggerOffset(target);
 
             this.tooltipCarrierDiv.style.display = 'block';
             this.tooltipCarrierDiv.style.top = top + 'px';
             this.tooltipCarrierDiv.style.left = left + 'px';
             this.tooltip.update({index: tick});
-        });
+        };
+
+        trigger.addEventListener('mouseenter', onEnter);
+        trigger.addEventListener('touchstart', onEnter, {passive: true});
 
         return trigger;
     }
