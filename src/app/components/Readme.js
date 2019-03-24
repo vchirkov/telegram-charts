@@ -25,6 +25,7 @@ export class Readme extends React.Component {
                 TransitionComponent={Transition}>
                 <AppBar>
                     <Toolbar className="readme-toolbar">
+                        <h1>Telegram Charts</h1>
                         <IconButton color="inherit" onClick={onClose}>
                             <CloseIcon/>
                         </IconButton>

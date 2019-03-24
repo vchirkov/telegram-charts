@@ -1,6 +1,6 @@
 # Telegram Charts
 
-Telegram Followers chart for Telegram Developer Contest
+Telegram Followers chart for Telegram Developer Contest [[GitHub](https://github.com/vchirkov/telegram-charts)]
 
 ## Getting Started
 
@@ -85,7 +85,7 @@ Opacity of `Navigation` extend, shrink slide area.
 * **navColor** (`default:'#30A3F0'`, `supports: valid css colors`)  
 Color of `Navigation` panel.
 
-* **navColor** (`default:'#fff'`, `supports: valid css colors`)  
+* **navColorNight** (`default:'#fff'`, `supports: valid css colors`)  
 Color of `Navigation` panel when in night mode.
 
 * **strokeWidth** (`default:2`, `min:0`)  
