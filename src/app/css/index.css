@@ -11,13 +11,14 @@ h1 {
     background-color: #1a1a1a;
 }
 
-.react-dat-gui {
+div.react-dat-gui {
+    right: 0;
     z-index: 1;
 }
 
 button.night-mode-control {
     position: fixed;
-    right: 304px;
+    right: 288px;
     top: 4px;
 }
 
