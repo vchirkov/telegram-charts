@@ -16,7 +16,7 @@ const DEFAULTS = {
     intervalEnd: 1,
     ticksNumber: 5,
     textOffset: 20,
-    className: 'animate-o',
+    className: 'animate-o-fast',
     startDay: 0,
     padding: 15,
     nightMode: false

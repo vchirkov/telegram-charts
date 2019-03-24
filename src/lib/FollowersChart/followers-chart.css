@@ -11,6 +11,10 @@
     transition: opacity 0.25s ease;
 }
 
+.animate-o-fast {
+    transition: opacity 0.15s ease;
+}
+
 .animate-to {
     transition: transform 0.25s ease, opacity 0.125s ease;
 }
