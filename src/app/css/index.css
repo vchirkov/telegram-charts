@@ -16,7 +16,9 @@ h1 {
 }
 
 button.night-mode-control {
-    padding: 0;
+    position: fixed;
+    right: 304px;
+    top: 4px;
 }
 
 .container {
